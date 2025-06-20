@@ -1,0 +1,35 @@
+package com.hospital.appointmentservice.admin.model;
+
+import com.hospital.appointmentservice.receptionist.entity.Appointment;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+
+@Getter
+@Setter
+@Entity
+public class Receptionist {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "staff_id", nullable = false)
+    private UUID id;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "staff_id", nullable = false)
+    private com.hospital.appointmentservice.admin.model.Staff staff;
+
+    @Nationalized
+    @Lob
+    @Column(name = "note")
+    private String note;
+
+    @OneToMany(mappedBy = "approvedBy")
+    private Set<Appointment> appointments = new LinkedHashSet<>();
+
+}
