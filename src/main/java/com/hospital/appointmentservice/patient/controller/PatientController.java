@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
+import com.hospital.appointmentservice.patient.dto.InvoiceDto;
+import com.hospital.appointmentservice.patient.service.InvoiceService;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,10 +22,12 @@ import java.util.UUID;
 @RequestMapping("/api/patient")
 public class PatientController {
     private final PatientService patientService;
+    private final InvoiceService invoiceService;
 
     @Autowired
-    public PatientController(PatientService patientService) {
+    public PatientController(PatientService patientService, InvoiceService invoiceService) {
         this.patientService = patientService;
+        this.invoiceService = invoiceService;
     }
 
     @GetMapping
@@ -47,6 +51,15 @@ public class PatientController {
             return ResponseEntity.notFound().build(); // patient không tồn tại
         }
         return ResponseEntity.ok(visits);
+    }
+
+    @GetMapping("/invoices/{id}")
+    public ResponseEntity<List<InvoiceDto>> getInvoicesOfPatient(@PathVariable("id") UUID id) {
+        List<InvoiceDto> invoices = invoiceService.getInvoicesByPatientId(id);
+        if (invoices == null || invoices.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(invoices);
     }
 
 
