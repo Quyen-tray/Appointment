@@ -44,7 +44,7 @@ public class PatientController {
                 : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id}/visits")
+    @GetMapping("/visits/{id}")
     public ResponseEntity<List<MedicalVisitDto>> getVisitsOfPatient(@PathVariable("id") UUID id) {
         List<MedicalVisitDto> visits = patientService.getMedicalVisitsByPatientId(id);
         if (visits == null) {
