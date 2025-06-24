@@ -2,6 +2,7 @@ package com.hospital.appointmentservice.patient.controller;
 
 import com.hospital.appointmentservice.patient.dto.AppointmentDto;
 import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
+import com.hospital.appointmentservice.patient.dto.AppointmentUpdateTimeDto;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
@@ -10,6 +11,7 @@ import com.hospital.appointmentservice.patient.service.PatientService;
 import com.hospital.appointmentservice.admin.model.Appointment;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/patient")
@@ -59,6 +64,7 @@ public class PatientController {
         List<AppointmentDto> dtos = list.stream().map(appointment -> {
             AppointmentDto dto = new AppointmentDto();
             dto.setId(appointment.getId());
+            dto.setPatientName(username);
             dto.setStatus(appointment.getStatus());
             dto.setScheduledTime(appointment.getScheduledTime().toString());
             dto.setDoctorName(appointment.getDoctor().getFullName());
@@ -114,5 +120,25 @@ public class PatientController {
 
         }
 
+    }
+
+    @PutMapping("/my-appointment/{id}")
+    public ResponseEntity<?> updateAppointmentTime( @PathVariable UUID id ,@RequestBody AppointmentUpdateTimeDto dto , Principal principal ){
+
+        //có đăng nhập dùng principal
+      //  String username = principal.getName();
+        String username = "patient01";
+        Patient patient = patientRepository.findByUser_Username(username);
+        
+        if(patient == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Không tìm thấy bệnh nhân!");
+        }
+        
+        try {
+            appointmentService.updateScheduledTime(id, patient.getId(), dto.getScheduledTime());
+            return ResponseEntity.ok("Cập nhật thành công!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

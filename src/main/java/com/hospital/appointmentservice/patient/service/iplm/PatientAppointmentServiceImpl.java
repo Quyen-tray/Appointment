@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,5 +66,21 @@ public class PatientAppointmentServiceImpl implements PatientAppointmentService{
 
        appointmentRepository.save(appointment);
 
+    }
+
+    @Override 
+    public void updateScheduledTime(UUID appointmentId , UUID patientId ,  LocalDateTime newTime) {
+    
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(()-> new RuntimeException("Không tìm thấy lịch hẹn!"));
+        if(!appointment.getPatient().getId().equals(patientId)){
+            throw new RuntimeException("Không có quyền sửa lịch hẹn này!");
+        }
+
+        if(newTime == null || newTime.isBefore(LocalDateTime.now())){
+            throw new RuntimeException("Thời gian không hợp lệ");
+        }
+
+        appointment.setScheduledTime(newTime);
+        appointmentRepository.save(appointment);
     }
 }

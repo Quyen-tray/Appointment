@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.patient.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,4 +20,6 @@ public interface PatientAppointmentService {
     // đăng kí lịch hẹn
     void createAppointment(String username , AppointmentRequestDto dto);
 
+    // sửa lịch hẹn ( đổi thời gian )
+    void updateScheduledTime(UUID appointmentId , UUID patientId , LocalDateTime newTime );
 }
