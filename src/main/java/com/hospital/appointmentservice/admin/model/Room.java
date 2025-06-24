@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.admin.model;
 
-import com.hospital.appointmentservice.receptionist.entity.Appointment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
