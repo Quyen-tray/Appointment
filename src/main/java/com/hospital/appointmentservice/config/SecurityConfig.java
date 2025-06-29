@@ -1,12 +1,10 @@
 package com.hospital.appointmentservice.config;
 
-import com.hospital.appointmentservice.auth.security.CustomAuthenticationFilter;
+import com.hospital.appointmentservice.auth.security.ActivityLoggingFilter;
 import com.hospital.appointmentservice.auth.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig  {
     @Autowired private JwtFilter jwtFilter;
+    @Autowired private ActivityLoggingFilter   activityLoggingFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,16 +26,15 @@ public class SecurityConfig  {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize->authorize
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/patient").authenticated()
+                        .requestMatchers("/api/auth/logout").authenticated()
                         .requestMatchers("/api/auth/login").permitAll()
                         .anyRequest().permitAll()
-                ).logout(customizer->customizer
-                        .logoutUrl("/api/auth/logout")
-                        .deleteCookies("JSESSIONID")
+                ).logout(AbstractHttpConfigurer::disable
                 ).rememberMe(customizer->customizer
                         .key("remember-me-key")
                         .tokenValiditySeconds(1209600)
-                ).addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class);
+                ).addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(activityLoggingFilter,jwtFilter.getClass());
         return http.build();
     }
 
