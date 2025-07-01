@@ -52,7 +52,8 @@ public class UserAccount {
     @OneToMany(mappedBy = "user")
     private Set<Patient> patients = new LinkedHashSet<>();
 
-    @OneToOne
-    private Staff staff;
+//    @OneToOne(mappedBy = "userAccount")
+//    private Staff staff;
+
 
 }

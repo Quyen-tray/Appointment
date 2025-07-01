@@ -19,10 +19,10 @@ public class Staff {
     @Column(name = "staff_id", nullable = false)
     private UUID id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "staff_id", nullable = false)
+   @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private UserAccount userAccount;
+
 
     @Nationalized
     @Lob
