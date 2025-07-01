@@ -57,8 +57,8 @@ public class PatientController {
 
     @GetMapping("/my-appointment")
     public ResponseEntity<?> getMyAppointments(Principal principal) {
-        String username = principal.getName();
-      //  String username = "patient01";
+      //  String username = principal.getName();
+       String username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
         if (patient == null) {
@@ -163,7 +163,8 @@ public class PatientController {
     @PutMapping("/update-profile")
     public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto , Principal principal){
         try{
-            String username = principal.getName();
+            String username = "patient01";
+           // String username = principal.getName();
             patientService.updateProfile(username, dto);
             return ResponseEntity.ok("Cập nhật thành công!");
         }catch(RuntimeException ex){

@@ -19,9 +19,9 @@ public class Staff {
     @Column(name = "staff_id", nullable = false)
     private UUID id;
 
-   @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private UserAccount userAccount;
+//    @OneToOne(fetch = FetchType.LAZY, optional = false)
+//     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+//     private UserAccount userAccount;
 
 
     @Nationalized
