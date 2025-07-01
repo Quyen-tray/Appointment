@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.admin.model;
 
-import com.hospital.appointmentservice.receptionist.entity.Appointment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -24,6 +23,10 @@ public class Room {
     @Lob
     @Column(name = "room_name")
     private String roomName;
+    
+    public String getName(){
+        return roomName;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
