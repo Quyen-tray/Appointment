@@ -59,4 +59,8 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MedicalVisit> medicalVisits = new LinkedHashSet<>();
+
+
 }
