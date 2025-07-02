@@ -93,14 +93,22 @@ public class AuthController {
             }
         }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<String> logout(HttpServletRequest request) {
-//        String authorization = request.getHeader("Authorization");
-//        String token = authorization.substring("Bearer ".length());
-//
-//
-//
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if(authorization == null|| !authorization.startsWith("Bearer ")){
+            return ResponseEntity.badRequest().body("Missing or invalid token");
+        }
+        String token = authorization.substring("Bearer ".length());
+        String username = jwtUtil.getUsernameFromToken(token);
+
+        login_auditService.log(username,"LOGOUT",request);
+        return ResponseEntity.ok("Logged out");
+
+
+    }
+
+
 
 
     }
