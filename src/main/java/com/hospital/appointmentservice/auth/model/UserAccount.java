@@ -2,7 +2,7 @@ package com.hospital.appointmentservice.auth.model;
 
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.admin.model.Staff;
-import com.hospital.appointmentservice.receptionist.entity.Appointment;
+import com.hospital.appointmentservice.admin.model.Appointment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
