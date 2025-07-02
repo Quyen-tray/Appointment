@@ -1,21 +1,25 @@
 package com.hospital.appointmentservice.patient.controller;
 
-import com.hospital.appointmentservice.patient.dto.PatientDto;
+import com.hospital.appointmentservice.admin.model.Appointment;
+import com.hospital.appointmentservice.patient.dto.*;
 import com.hospital.appointmentservice.patient.entity.Patient;
+import com.hospital.appointmentservice.patient.repository.PatientRepository;
+import com.hospital.appointmentservice.patient.service.PatientAppointmentService;
 import com.hospital.appointmentservice.patient.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
-import com.hospital.appointmentservice.patient.dto.InvoiceDto;
 import com.hospital.appointmentservice.patient.service.InvoiceService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -108,9 +112,7 @@ public class PatientController {
             return ResponseEntity.ok("Đã đăng ký thành công!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-
         }
-
     }
 
     @PutMapping("/my-appointment/{id}")
