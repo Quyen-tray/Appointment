@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.admin.model;
 
-import com.hospital.appointmentservice.receptionist.entity.Appointment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,5 +35,9 @@ public class Doctor {
 
     @OneToMany(mappedBy = "doctor")
     private Set<Appointment> appointments = new LinkedHashSet<>();
+
+     public String getFullName() {
+        return staff != null ? staff.getFullName() : null;
+    }
 
 }

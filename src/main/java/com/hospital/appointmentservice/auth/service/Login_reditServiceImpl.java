@@ -10,6 +10,8 @@ import java.net.http.HttpRequest;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @Service
 public class Login_reditServiceImpl implements Login_auditService{
     @Autowired private Login_auditRepository login_auditRepository;
@@ -19,7 +21,7 @@ public class Login_reditServiceImpl implements Login_auditService{
         Login_audit login_audit = new Login_audit();
         login_audit.setUsername(username);
         login_audit.setEvent(event);
-        login_audit.setTimestamp(Instant.from(LocalDateTime.now()));
+        login_audit.setTimestamp(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         login_audit.setIpAddress(request.getRemoteAddr());
         login_audit.setUserAgent(request.getHeader("user-agent"));
 
