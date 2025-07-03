@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.Nationalized;
+
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -38,4 +40,13 @@ public class FeedBack {
     @Lob
     @Column(name = "comment")
     private String comment;
+
+    @Column(name = "date_create", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreate;
+
+    @PrePersist
+    protected void onCreate() {
+        this.dateCreate = new Date();
+    }
 }

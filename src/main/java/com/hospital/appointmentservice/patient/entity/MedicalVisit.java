@@ -1,6 +1,6 @@
 package com.hospital.appointmentservice.patient.entity;
 
-import com.hospital.appointmentservice.receptionist.entity.Appointment;
+import com.hospital.appointmentservice.admin.model.Appointment;
 import com.hospital.appointmentservice.admin.model.Doctor;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import jakarta.persistence.*;
