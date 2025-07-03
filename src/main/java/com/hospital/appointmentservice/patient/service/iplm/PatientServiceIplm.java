@@ -4,6 +4,7 @@ import com.hospital.appointmentservice.auth.service.AuthService;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
 import com.hospital.appointmentservice.patient.dto.PatientProfileDto;
 import com.hospital.appointmentservice.patient.dto.UpdateProfileRequestDto;
+
 import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.entity.MedicalVisit;
@@ -29,7 +30,10 @@ public class PatientServiceIplm implements PatientService {
     private final AuthService authService;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public PatientServiceIplm(PatientRepository patientRepository,MedicalVisitRepository medicalVisitRepository, AuthService authService, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public PatientServiceIplm(PatientRepository patientRepository,
+                              MedicalVisitRepository medicalVisitRepository,
+                              AuthService authService) {
         this.patientRepository = patientRepository;
         this.medicalVisitRepository = medicalVisitRepository;
         this.authService = authService;

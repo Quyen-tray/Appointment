@@ -2,6 +2,7 @@ package com.hospital.appointmentservice.patient.controller;
 
 import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
 import com.hospital.appointmentservice.patient.service.MedicalVisitService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 public class MedicalVisitController {
     private final MedicalVisitService medicalVisitService;
 
-    
+    @Autowired
     public MedicalVisitController(MedicalVisitService medicalVisitService) {
         this.medicalVisitService = medicalVisitService;
     }

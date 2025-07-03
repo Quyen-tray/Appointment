@@ -2,6 +2,7 @@ package com.hospital.appointmentservice.patient.controller;
 
 import com.hospital.appointmentservice.patient.dto.FeedBackDto;
 import com.hospital.appointmentservice.patient.service.FeedBackService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,6 +14,8 @@ public class FeedBackController {
 
     private final FeedBackService feedBackService;
 
+
+    @Autowired
     public FeedBackController(FeedBackService feedBackService) {
         this.feedBackService = feedBackService;
     }
@@ -20,6 +23,8 @@ public class FeedBackController {
     @GetMapping
     public ResponseEntity<List<FeedBackDto>> getAllFeedBacks() {
         return ResponseEntity.ok(feedBackService.getAllFeedBack());
+    public ResponseEntity<List<FeedBackDto>> getAllFeedBacks(@RequestParam int page) {
+        return ResponseEntity.ok(feedBackService.getAllFeedBack(page));
     }
 
     @GetMapping("/{id}")
