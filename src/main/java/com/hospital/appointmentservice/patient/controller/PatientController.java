@@ -46,8 +46,9 @@ public class PatientController {
 
 
     @Autowired
-    public PatientController(PatientService patientService, InvoiceService invoiceService, PatientAppointmentService appointmentService,
+    public PatientController(AppointmentRepository appointmentRepository,PatientService patientService, InvoiceService invoiceService, PatientAppointmentService appointmentService,
                              PatientRepository patientRepository) {
+        this.appointmentRepository = appointmentRepository;
         this.patientService = patientService;
         this.invoiceService = invoiceService;
         this.appointmentService = appointmentService;
@@ -80,8 +81,8 @@ public class PatientController {
             dto.setScheduledTime(appointment.getScheduledTime().toString());
             dto.setDoctorName(appointment.getDoctor().getFullName());
             dto.setRoomName(
+                    appointment.getRoom() != null ? appointment.getRoom().getRoomName() : "Chưa có phòng!");
                     appointment.getRoom() != null ? appointment.getRoom().getName() : "Chưa có phòng!");
-            return dto;
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
@@ -137,7 +138,7 @@ public class PatientController {
          String username = principal.getName();
      //   String username = "patient01";
         //  String username = principal.getName();
-        String username = "patient01";
+        username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
         if(patient == null){

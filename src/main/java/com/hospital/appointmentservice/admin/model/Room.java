@@ -40,4 +40,5 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
+
 }
