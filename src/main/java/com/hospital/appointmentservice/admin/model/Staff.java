@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.admin.model;
 
-import com.hospital.appointmentservice.auth.model.UserAccount;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

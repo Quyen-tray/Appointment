@@ -63,5 +63,7 @@ public class Patient {
     @Column(name = "avatar")
     private String avatar ;
 
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MedicalVisit> medicalVisits = new LinkedHashSet<>();
 
 }

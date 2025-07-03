@@ -9,7 +9,6 @@ import com.hospital.appointmentservice.auth.service.Login_auditService;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
 import com.hospital.appointmentservice.patient.service.PatientService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +27,6 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final Login_auditService login_auditService;
 
-    @Autowired
     public AuthController(AuthService authService,
                           PatientService patientService,
                           AuthenticationManager authenticationManager,
