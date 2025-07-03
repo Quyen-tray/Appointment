@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
+import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import com.hospital.appointmentservice.patient.service.FeedBackService;
 import com.hospital.appointmentservice.patient.dto.FeedBackDto;
 import com.hospital.appointmentservice.patient.entity.FeedBack;
@@ -7,8 +8,10 @@ import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.FeedBackRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.admin.model.Doctor;
-import com.hospital.appointmentservice.patient.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class FeedBackServiceImpl implements FeedBackService {
-
+    private final int pageSize = 100;
+    @Autowired
     private final FeedBackRepository feedBackRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
@@ -31,8 +35,9 @@ public class FeedBackServiceImpl implements FeedBackService {
     }
 
     @Override
-    public List<FeedBackDto> getAllFeedBack() {
-        return feedBackRepository.findAll().stream()
+    public List<FeedBackDto> getAllFeedBack(int page) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "dateCreate"));
+        return feedBackRepository.findAll(pageable).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
