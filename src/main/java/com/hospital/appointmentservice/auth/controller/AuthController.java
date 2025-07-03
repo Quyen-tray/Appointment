@@ -47,7 +47,8 @@ public class AuthController {
         try {
             UserAccountDto userAccount = new UserAccountDto(userAccountDto.getUsername(),
                     userAccountDto.getPassword(),
-                    userAccountDto.getEmail()
+                    userAccountDto.getEmail(),
+                    "PATIENT"
             );
             //valid name existed in database table user account
             if(authService.existsByUserName(userAccountDto.getUsername())){
@@ -94,7 +95,7 @@ public class AuthController {
             }
         }
 
-    @PostMapping("/logout")
+    @PostMapping(   "/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         if(authorization == null|| !authorization.startsWith("Bearer ")){
