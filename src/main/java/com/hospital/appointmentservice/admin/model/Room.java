@@ -23,6 +23,10 @@ public class Room {
     @Lob
     @Column(name = "room_name")
     private String roomName;
+    
+    public String getName(){
+        return roomName;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
