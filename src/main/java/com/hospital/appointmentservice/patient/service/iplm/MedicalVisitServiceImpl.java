@@ -21,6 +21,7 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     private final PatientRepository patientRepository; // để kiểm tra tồn tại patient khi tạo mới
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+
     @Autowired
     public MedicalVisitServiceImpl(MedicalVisitRepository medicalVisitRepository,
                                    PatientRepository patientRepository) {
@@ -60,6 +61,7 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         // Relationship: nếu dto.getPatientId()!=null, load Patient entity và set vào mv.setPatient(...)
         // Cần inject PatientRepository, AppointmentRepository, DoctorRepository nếu muốn create/update relation.
     }
+
 
     @Override
     @Transactional(readOnly = true)

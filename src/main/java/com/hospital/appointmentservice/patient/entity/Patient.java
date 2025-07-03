@@ -1,6 +1,7 @@
 package com.hospital.appointmentservice.patient.entity;
 
 import com.hospital.appointmentservice.auth.model.UserAccount;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hospital.appointmentservice.admin.model.Appointment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -32,7 +33,7 @@ public class Patient {
     @Lob
     @Column(name = "full_name")
     private String fullName;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "dob")
     private LocalDate dob;
 
@@ -59,8 +60,17 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
+
+    @Column(name = "avatar")
+    private String avatar ;
+
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MedicalVisit> medicalVisits = new LinkedHashSet<>();
+
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MedicalVisit> medicalVisits = new LinkedHashSet<>();
+
 
 
 }

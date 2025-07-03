@@ -41,6 +41,7 @@ public class FeedBack {
     @Column(name = "comment")
     private String comment;
 
+
     @Column(name = "date_create", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreate;
@@ -49,4 +50,5 @@ public class FeedBack {
     protected void onCreate() {
         this.dateCreate = new Date();
     }
+
 }

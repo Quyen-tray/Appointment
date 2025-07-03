@@ -1,11 +1,23 @@
 package com.hospital.appointmentservice.patient.controller;
-
+import com.hospital.appointmentservice.patient.dto.AppointmentDto;
+import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
+import com.hospital.appointmentservice.patient.dto.AppointmentUpdateTimeDto;
+import com.hospital.appointmentservice.patient.dto.PatientDto;
+import com.hospital.appointmentservice.patient.dto.PatientProfileDto;
+import com.hospital.appointmentservice.patient.dto.UpdateProfileRequestDto;
 import com.hospital.appointmentservice.admin.model.Appointment;
 import com.hospital.appointmentservice.patient.dto.*;
 import com.hospital.appointmentservice.patient.entity.Patient;
+import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.service.PatientAppointmentService;
 import com.hospital.appointmentservice.patient.service.PatientService;
+import java.security.Principal;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +37,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/patient")
 public class PatientController {
+
+    private final AppointmentRepository appointmentRepository;
     private final PatientService patientService;
     private final InvoiceService invoiceService;
     private final PatientRepository patientRepository;
@@ -38,6 +52,7 @@ public class PatientController {
         this.invoiceService = invoiceService;
         this.appointmentService = appointmentService;
         this.patientRepository = patientRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @PostMapping("/add")
@@ -46,8 +61,9 @@ public class PatientController {
     }
 
     @GetMapping("/my-appointment")
-    public ResponseEntity<?> getMyAppointments() {
-        String username = "patient01";
+    public ResponseEntity<?> getMyAppointments(Principal principal) {
+       String username = principal.getName();
+    //    String username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
         if (patient == null) {
@@ -73,12 +89,11 @@ public class PatientController {
     @PostMapping("/reject-appointment")
     public ResponseEntity<?> rejectAppointment(@RequestParam UUID appointmentId, Principal principal) {
         // đăng nhập thì bỏ cmt
-        // if(principal == null){
-        // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng
-        // nhập!");
-        // }
-        // String username = principal.getName();
-        String username = "patient01";
+        if(principal == null){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập!");
+        }
+        String username = principal.getName();
+        // String username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
         if (patient == null) {
@@ -106,8 +121,8 @@ public class PatientController {
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequestDto dto, Principal principal) {
 
         try {
-            // String username = principal.getName(); // lấy từ token / session
-            String username = "patient01";
+             String username = principal.getName(); // lấy từ token / session
+         //   String username = "patient01";
             appointmentService.createAppointment(username, dto);
             return ResponseEntity.ok("Đã đăng ký thành công!");
         } catch (RuntimeException e) {
@@ -119,6 +134,8 @@ public class PatientController {
     public ResponseEntity<?> updateAppointmentTime( @PathVariable UUID id ,@RequestBody AppointmentUpdateTimeDto dto , Principal principal ){
 
         //có đăng nhập dùng principal
+         String username = principal.getName();
+     //   String username = "patient01";
         //  String username = principal.getName();
         String username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
@@ -132,8 +149,34 @@ public class PatientController {
             return ResponseEntity.ok("Cập nhật thành công!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+     
         }
     }
+
+    //view profile
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfileByUserName(Principal principal){
+        if(principal == null ){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bạn chưa đăng nhập!");
+            }  
+        String username = principal.getName();
+        PatientProfileDto profile = patientService.getProfileByUserName(username);
+        return ResponseEntity.ok(profile);
+    }
+
+
+    @PutMapping("/update-profile")
+    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto , Principal principal){
+        try{
+            // String username = "patient01";
+           String username = principal.getName();
+            patientService.updateProfile(username, dto);
+            return ResponseEntity.ok("Cập nhật thành công!");
+        }catch(RuntimeException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+ 
 
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {

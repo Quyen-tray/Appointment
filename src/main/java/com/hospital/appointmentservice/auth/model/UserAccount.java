@@ -1,7 +1,6 @@
 package com.hospital.appointmentservice.auth.model;
 
 import com.hospital.appointmentservice.patient.entity.Patient;
-import com.hospital.appointmentservice.admin.model.Staff;
 import com.hospital.appointmentservice.admin.model.Appointment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -52,7 +51,8 @@ public class UserAccount {
     @OneToMany(mappedBy = "user")
     private Set<Patient> patients = new LinkedHashSet<>();
 
-    @OneToOne
-    private Staff staff;
+//    @OneToOne(mappedBy = "userAccount")
+//    private Staff staff;
+
 
 }

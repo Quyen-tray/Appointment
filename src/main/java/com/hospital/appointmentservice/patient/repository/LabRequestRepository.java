@@ -10,6 +10,8 @@ import java.util.UUID;
 
 public interface LabRequestRepository extends JpaRepository<LabRequest, UUID> {
 
+    List<LabRequest> findByVisit_Patient_Id(UUID patientId);
+
     /**
      * Spring Data JPA method dựa trên tên phương thức:
      * findByVisit_Patient_Id: join visit -> patient -> id
