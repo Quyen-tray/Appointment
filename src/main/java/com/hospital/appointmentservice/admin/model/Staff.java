@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.admin.model;
 
-import com.hospital.appointmentservice.auth.model.UserAccount;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -19,10 +18,10 @@ public class Staff {
     @Column(name = "staff_id", nullable = false)
     private UUID id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "staff_id", nullable = false)
-    private UserAccount userAccount;
+//    @OneToOne(fetch = FetchType.LAZY, optional = false)
+//     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+//     private UserAccount userAccount;
+
 
     @Nationalized
     @Lob

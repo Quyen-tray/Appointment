@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public class AppointmentDto {
       private UUID id;
+    private String patientName ;
     private String status;
     private String scheduledTime;
     private String doctorName;
@@ -14,6 +15,14 @@ public class AppointmentDto {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getPatientName(){
+        return patientName ;
+    }
+
+    public void setPatientName(String patientName){
+        this.patientName = patientName ;
     }
 
     public String getStatus() {

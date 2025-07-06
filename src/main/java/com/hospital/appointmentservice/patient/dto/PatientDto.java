@@ -1,11 +1,16 @@
 package com.hospital.appointmentservice.patient.dto;
 
-import lombok.*;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientDto {
@@ -17,4 +22,6 @@ public class PatientDto {
     private String phone;
     private String email;
     private String insuranceId;
+
+    private List<MedicalVisitDto> medicalVisits;
 }

@@ -9,14 +9,12 @@ import com.hospital.appointmentservice.auth.service.Login_auditService;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
 import com.hospital.appointmentservice.patient.service.PatientService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +27,6 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final Login_auditService login_auditService;
 
-    @Autowired
     public AuthController(AuthService authService,
                           PatientService patientService,
                           AuthenticationManager authenticationManager,
@@ -47,7 +44,8 @@ public class AuthController {
         try {
             UserAccountDto userAccount = new UserAccountDto(userAccountDto.getUsername(),
                     userAccountDto.getPassword(),
-                    userAccountDto.getEmail()
+                    userAccountDto.getEmail(),
+                    "PATIENT"
             );
             //valid name existed in database table user account
             if(authService.existsByUserName(userAccountDto.getUsername())){
@@ -94,14 +92,22 @@ public class AuthController {
             }
         }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<String> logout(HttpServletRequest request) {
-//        String authorization = request.getHeader("Authorization");
-//        String token = authorization.substring("Bearer ".length());
-//
-//
-//
-//    }
+    @PostMapping(   "/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if(authorization == null|| !authorization.startsWith("Bearer ")){
+            return ResponseEntity.badRequest().body("Missing or invalid token");
+        }
+        String token = authorization.substring("Bearer ".length());
+        String username = jwtUtil.getUsernameFromToken(token);
+
+        login_auditService.log(username,"LOGOUT",request);
+        return ResponseEntity.ok("Logged out");
+
+
+    }
+
+
 
 
     }
