@@ -68,4 +68,9 @@ public class Patient {
     private Set<MedicalVisit> medicalVisits = new LinkedHashSet<>();
 
 
+UPDATE
+@Nationalized
+@Lob
+@Column(name = "address")
+private String address;
 }

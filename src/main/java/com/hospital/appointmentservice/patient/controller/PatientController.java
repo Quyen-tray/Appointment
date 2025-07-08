@@ -83,6 +83,7 @@ public class PatientController {
             dto.setRoomName(
                     appointment.getRoom() != null ? appointment.getRoom().getRoomName() : "Chưa có phòng!");
               return  dto;
+
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
