@@ -53,6 +53,7 @@ public class PatientController {
         this.invoiceService = invoiceService;
         this.appointmentService = appointmentService;
         this.patientRepository = patientRepository;
+
     }
 
     @PostMapping("/add")
@@ -81,7 +82,8 @@ public class PatientController {
             dto.setDoctorName(appointment.getDoctor().getFullName());
             dto.setRoomName(
                     appointment.getRoom() != null ? appointment.getRoom().getRoomName() : "Chưa có phòng!");
-                 return dto;
+              return  dto;
+
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
