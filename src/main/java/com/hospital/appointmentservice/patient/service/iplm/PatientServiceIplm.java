@@ -30,10 +30,10 @@ public class PatientServiceIplm implements PatientService {
     private final AuthService authService;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    @Autowired
+
     public PatientServiceIplm(PatientRepository patientRepository,
                               MedicalVisitRepository medicalVisitRepository,
-                              AuthService authService) {
+                              AuthService authService, PasswordEncoder passwordEncoder) {
         this.patientRepository = patientRepository;
         this.medicalVisitRepository = medicalVisitRepository;
         this.authService = authService;
