@@ -21,7 +21,6 @@ public interface LabRequestRepository extends JpaRepository<LabRequest, UUID> {
      * JOIN l.visit mv
      * WHERE mv.patient.id = :patientId
      */
-    List<LabRequest> findByVisit_Patient_Id(UUID patientId);
 
     // Hoặc nếu tên trường khác, ví dụ LabRequest.visit, MedicalVisit.patient:
     // List<LabRequest> findByVisit_Patient_PatientId(UUID patientId);
