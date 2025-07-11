@@ -29,6 +29,7 @@ public class UserController {
         Claims user = jwtUtil.getAllClaims(token);
         UserAccountDto userDto = new UserAccountDto();
         userDto.setUsername(user.getSubject());
+        userDto.setId(user.get("id", String.class));
         userDto.setRoles(user.get("role", String.class));
         return ResponseEntity.ok(userDto);
     }

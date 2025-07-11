@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.EntityGraph;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,4 +15,5 @@ Patient findByUser_Username(String username);
     Boolean existsPatientByEmail(String email);
     @EntityGraph(attributePaths = {"medicalVisits"})
     Optional<Patient> findWithVisitsById(UUID id);
+    List<Patient> findAllByUser_Id(UUID userId);
 }

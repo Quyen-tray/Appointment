@@ -10,13 +10,12 @@ import com.hospital.appointmentservice.patient.dto.*;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
+import com.hospital.appointmentservice.patient.service.MedicalVisitService;
 import com.hospital.appointmentservice.patient.service.PatientAppointmentService;
 import com.hospital.appointmentservice.patient.service.PatientService;
 import java.security.Principal;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,8 +44,9 @@ public class PatientController {
     private final PatientAppointmentService appointmentService;
 
 
+
     @Autowired
-    public PatientController(AppointmentRepository appointmentRepository,PatientService patientService, InvoiceService invoiceService, PatientAppointmentService appointmentService,
+    public PatientController(AppointmentRepository appointmentRepository, PatientService patientService, InvoiceService invoiceService, PatientAppointmentService appointmentService,
                              PatientRepository patientRepository) {
         this.appointmentRepository = appointmentRepository;
         this.patientService = patientService;
@@ -63,8 +63,8 @@ public class PatientController {
 
     @GetMapping("/my-appointment")
     public ResponseEntity<?> getMyAppointments(Principal principal) {
-       String username = principal.getName();
-    //    String username = "patient01";
+        String username = principal.getName();
+        //    String username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
         if (patient == null) {
@@ -82,17 +82,18 @@ public class PatientController {
             dto.setDoctorName(appointment.getDoctor().getFullName());
             dto.setRoomName(
                     appointment.getRoom() != null ? appointment.getRoom().getRoomName() : "Chưa có phòng!");
-              return  dto;
+            return dto;
 
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }
+
     @PostMapping("/reject-appointment")
     public ResponseEntity<?> rejectAppointment(@RequestParam UUID appointmentId, Principal principal) {
         // đăng nhập thì bỏ cmt
-        if(principal == null){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập!");
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập!");
         }
         String username = principal.getName();
         // String username = "patient01";
@@ -123,8 +124,8 @@ public class PatientController {
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequestDto dto, Principal principal) {
 
         try {
-             String username = principal.getName(); // lấy từ token / session
-         //   String username = "patient01";
+            String username = principal.getName(); // lấy từ token / session
+            //   String username = "patient01";
             appointmentService.createAppointment(username, dto);
             return ResponseEntity.ok("Đã đăng ký thành công!");
         } catch (RuntimeException e) {
@@ -133,16 +134,16 @@ public class PatientController {
     }
 
     @PutMapping("/my-appointment/{id}")
-    public ResponseEntity<?> updateAppointmentTime( @PathVariable UUID id ,@RequestBody AppointmentUpdateTimeDto dto , Principal principal ){
+    public ResponseEntity<?> updateAppointmentTime(@PathVariable UUID id, @RequestBody AppointmentUpdateTimeDto dto, Principal principal) {
 
         //có đăng nhập dùng principal
-         String username = principal.getName();
-     //   String username = "patient01";
+        String username = principal.getName();
+        //   String username = "patient01";
         //  String username = principal.getName();
         username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
-        if(patient == null){
+        if (patient == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Không tìm thấy bệnh nhân!");
         }
 
@@ -151,16 +152,16 @@ public class PatientController {
             return ResponseEntity.ok("Cập nhật thành công!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-     
+
         }
     }
 
     //view profile
     @GetMapping("/profile")
-    public ResponseEntity<?> getProfileByUserName(Principal principal){
-        if(principal == null ){
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bạn chưa đăng nhập!");
-            }  
+    public ResponseEntity<?> getProfileByUserName(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bạn chưa đăng nhập!");
+        }
         String username = principal.getName();
         PatientProfileDto profile = patientService.getProfileByUserName(username);
         return ResponseEntity.ok(profile);
@@ -168,17 +169,17 @@ public class PatientController {
 
 
     @PutMapping("/update-profile")
-    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto , Principal principal){
-        try{
+    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto, Principal principal) {
+        try {
             // String username = "patient01";
-           String username = principal.getName();
+            String username = principal.getName();
             patientService.updateProfile(username, dto);
             return ResponseEntity.ok("Cập nhật thành công!");
-        }catch(RuntimeException ex){
+        } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
- 
+
 
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
@@ -211,4 +212,35 @@ public class PatientController {
         }
         return ResponseEntity.ok(invoices);
     } //http://localhost:8081/api/patient/invoices/{patientId}
+    @Autowired
+    private PatientRepository PatientRepository;
+    @Autowired
+    private MedicalVisitService medicalVisitService;
+
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<?> getPatientByUserId(@PathVariable("userId") UUID userId) {
+        List<Patient> patients = patientRepository.findAllByUser_Id(userId);
+
+        if (patients.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Không tìm thấy bệnh nhân với userId: " + userId);
+        }
+        Optional<Patient> optionalValidPatient = patients.stream()
+                .filter(p -> p.getFullName() != null)
+                .findFirst();
+
+        if (optionalValidPatient.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Tìm thấy nhiều bệnh nhân nhưng không có bản ghi hợp lệ.");
+        }
+
+        Patient patient = optionalValidPatient.get();
+        // Map sang PatientDto chỉ trả về id, userId, fullName (các trường khác nếu muốn)
+        PatientDto dto = new PatientDto();
+        dto.setId(patient.getId() != null ? patient.getId().toString() : null);
+        dto.setUserId(patient.getUser() != null ? patient.getUser().getId().toString() : null);
+        dto.setFullName(patient.getFullName());
+        // Có thể set thêm các trường khác nếu muốn
+        return ResponseEntity.ok(dto);
+    }
 }

@@ -123,10 +123,20 @@ public class FeedBackServiceImpl implements FeedBackService {
     private FeedBackDto mapToDto(FeedBack entity) {
         FeedBackDto dto = new FeedBackDto();
         dto.setId(entity.getId().toString());
-        if (entity.getPatient() != null) dto.setPatientId(entity.getPatient().getId().toString());
-        if (entity.getDoctor() != null) dto.setDoctorId(entity.getDoctor().getId().toString());
+        if (entity.getPatient() != null){ dto.setPatientId(entity.getPatient().getId().toString());
+        dto.setPatientName(entity.getPatient().getFullName());
+    }else {
+        dto.setPatientName("Ẩn danh");
+    }
+        if (entity.getDoctor() != null){ dto.setDoctorId(entity.getDoctor().getId().toString());
+        dto.setDoctorName(entity.getDoctor().getFullName());
+
+} else {
+        dto.setDoctorName("Không rõ");
+    }
         dto.setScore(entity.getScore());
         dto.setComment(entity.getComment());
+        dto.setCreated(entity.getDateCreate());
         return dto;
     }
 }

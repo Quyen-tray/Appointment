@@ -38,6 +38,7 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         }
         if (mv.getDoctor() != null && mv.getDoctor().getId() != null) {
             dto.setDoctorId(mv.getDoctor().getId().toString());
+            dto.setDoctorName(mv.getDoctor().getFullName());
         }
         if (mv.getPatient() != null && mv.getPatient().getId() != null) {
             dto.setPatientId(mv.getPatient().getId().toString());
