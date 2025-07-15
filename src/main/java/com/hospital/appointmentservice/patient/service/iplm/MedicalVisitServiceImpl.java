@@ -5,6 +5,7 @@ import com.hospital.appointmentservice.patient.entity.MedicalVisit;
 import com.hospital.appointmentservice.patient.repository.MedicalVisitRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.service.MedicalVisitService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     private final PatientRepository patientRepository; // để kiểm tra tồn tại patient khi tạo mới
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+
+    @Autowired
     public MedicalVisitServiceImpl(MedicalVisitRepository medicalVisitRepository,
                                    PatientRepository patientRepository) {
         this.medicalVisitRepository = medicalVisitRepository;
@@ -46,6 +49,19 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         }
         return dto;
     }
+
+    // Helper: map DTO -> entity (cho create/update). Cần load Appointment/Doctor/Patient từ DB nếu cần.
+    // Ví dụ đơn giản chỉ set các trường text; nếu relationship, cần fetch các entity Appointment, Doctor, Patient.
+    private void mapToEntity(MedicalVisit mv, MedicalVisitDto dto) {
+        // Ví dụ: chỉ set diagnosis, note, createdAt; relationship cần fetch entity khác:
+        mv.setDiagnosis(dto.getDiagnosis());
+        mv.setNote(dto.getNote());
+        // Nếu createdAt là String và bạn muốn parse:
+        // mv.setCreatedAt(LocalDateTime.parse(dto.getCreatedAt(), dateFormatter));
+        // Relationship: nếu dto.getPatientId()!=null, load Patient entity và set vào mv.setPatient(...)
+        // Cần inject PatientRepository, AppointmentRepository, DoctorRepository nếu muốn create/update relation.
+    }
+
 
     @Override
     @Transactional(readOnly = true)

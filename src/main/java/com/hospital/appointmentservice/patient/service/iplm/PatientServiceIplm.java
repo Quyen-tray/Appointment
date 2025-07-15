@@ -4,12 +4,14 @@ import com.hospital.appointmentservice.auth.service.AuthService;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
 import com.hospital.appointmentservice.patient.dto.PatientProfileDto;
 import com.hospital.appointmentservice.patient.dto.UpdateProfileRequestDto;
+
 import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.entity.MedicalVisit;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.repository.MedicalVisitRepository;
 import com.hospital.appointmentservice.patient.service.PatientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,13 +31,16 @@ public class PatientServiceIplm implements PatientService {
     private final AuthService authService;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public PatientServiceIplm(PatientRepository patientRepository,MedicalVisitRepository medicalVisitRepository, AuthService authService, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public PatientServiceIplm(PasswordEncoder passwordEncoder,PatientRepository patientRepository,
+                              MedicalVisitRepository medicalVisitRepository,
+                              AuthService authService) {
+         this.passwordEncoder = passwordEncoder;
         this.patientRepository = patientRepository;
         this.medicalVisitRepository = medicalVisitRepository;
         this.authService = authService;
-        this.passwordEncoder = passwordEncoder;
     }
-
+  
     @Override
     public List<PatientDto> getPatients() {
         return patientRepository.findAll().stream()

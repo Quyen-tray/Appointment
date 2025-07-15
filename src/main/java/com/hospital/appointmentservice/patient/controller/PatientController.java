@@ -1,6 +1,4 @@
 package com.hospital.appointmentservice.patient.controller;
-
-
 import com.hospital.appointmentservice.patient.dto.AppointmentDto;
 import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
 import com.hospital.appointmentservice.patient.dto.AppointmentUpdateTimeDto;
@@ -20,6 +18,7 @@ import java.util.stream.Collectors;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.hospital.appointmentservice.patient.service.InvoiceService;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -40,14 +44,16 @@ public class PatientController {
     private final PatientRepository patientRepository;
     private final PatientAppointmentService appointmentService;
 
-    public PatientController(PatientService patientService,InvoiceService invoiceService, PatientAppointmentService appointmentService,
-            PatientRepository patientRepository, AppointmentRepository appointmentRepository) {
 
+    @Autowired
+    public PatientController(AppointmentRepository appointmentRepository,PatientService patientService, InvoiceService invoiceService, PatientAppointmentService appointmentService,
+                             PatientRepository patientRepository) {
+        this.appointmentRepository = appointmentRepository;
         this.patientService = patientService;
         this.invoiceService = invoiceService;
         this.appointmentService = appointmentService;
         this.patientRepository = patientRepository;
-        this.appointmentRepository = appointmentRepository;
+
     }
 
     @PostMapping("/add")
@@ -74,8 +80,9 @@ public class PatientController {
             dto.setScheduledTime(appointment.getScheduledTime().toString());
             dto.setDoctorName(appointment.getDoctor().getFullName());
             dto.setRoomName(
-                    appointment.getRoom() != null ? appointment.getRoom().getName() : "Chưa có phòng!");
-            return dto;
+                    appointment.getRoom() != null ? appointment.getRoom().getRoomName() : "Chưa có phòng!");
+              return  dto;
+
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
@@ -185,6 +192,7 @@ public class PatientController {
         }
     }
  
+
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
         List<PatientDto> patients = patientService.getPatients();

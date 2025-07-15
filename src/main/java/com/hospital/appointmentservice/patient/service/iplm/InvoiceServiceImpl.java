@@ -5,6 +5,11 @@ package com.hospital.appointmentservice.patient.service.iplm;
 import com.hospital.appointmentservice.patient.dto.InvoiceDto;
 import com.hospital.appointmentservice.patient.repository.InvoiceRepository;
 import com.hospital.appointmentservice.patient.service.InvoiceService;
+import com.hospital.appointmentservice.patient.entity.Invoice;
+import com.hospital.appointmentservice.patient.repository.InvoiceRepository;
+import com.hospital.appointmentservice.patient.service.InvoiceService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +21,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
 
+    @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository) {
         this.invoiceRepository = invoiceRepository;
     }
