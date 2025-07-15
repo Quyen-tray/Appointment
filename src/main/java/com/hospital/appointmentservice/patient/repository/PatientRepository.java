@@ -8,10 +8,15 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, UUID> {
 Patient findByUser_Username(String username);
     Boolean existsPatientByEmail(String email);
     @EntityGraph(attributePaths = {"medicalVisits"})
     Optional<Patient> findWithVisitsById(UUID id);
+
+    Page<Patient> findAll(Pageable pageable);
 }

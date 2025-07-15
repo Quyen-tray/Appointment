@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 @Service
 public class RoomService {
@@ -26,8 +29,6 @@ public class RoomService {
         return roomRepository.findById(id).map(this::convertToDTO);
     }
 
-
-
     private RoomResponseDTO convertToDTO(Room room) {
         return new RoomResponseDTO(
                 room.getId(),
@@ -39,4 +40,15 @@ public class RoomService {
                 room.getDescription()
         );
     }
+
+    public List<RoomResponseDTO> getRoomsByType(String roomType) {
+        List<Room> rooms = roomRepository.findByRoomType(roomType);
+        return rooms.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public Page<RoomResponseDTO> getRoomsPaginated(Pageable pageable) {
+        return roomRepository.findAll(pageable)
+                .map(this::convertToDTO);
+    }
+
 }

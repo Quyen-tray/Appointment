@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
@@ -37,5 +39,13 @@ public class PatientControllerReceptionist {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/patients/paged")
+    public ResponseEntity<Page<PatientResponseDTO>> getPatientsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return ResponseEntity.ok(patientService.getPatientsPaged(page, size));
     }
 }
