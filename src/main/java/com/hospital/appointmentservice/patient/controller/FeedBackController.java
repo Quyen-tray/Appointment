@@ -20,10 +20,10 @@ public class FeedBackController {
         this.feedBackService = feedBackService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<FeedBackDto>> getAllFeedBacks() {
-        return ResponseEntity.ok(feedBackService.getAllFeedBack());
 
+    @GetMapping
+    public ResponseEntity<List<FeedBackDto>> getAllFeedBacks(@RequestParam int page) {
+        return ResponseEntity.ok(feedBackService.getAllFeedBack(page));
     }
 
     @GetMapping("/{id}")

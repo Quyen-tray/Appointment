@@ -39,11 +39,6 @@ public class FeedBackServiceImpl implements FeedBackService {
     }
 
     @Override
-    public List<FeedBackDto> getAllFeedBack() {
-        return feedBackRepository.findAll().stream().map(this::mapToDto)
-                .collect(Collectors.toList());
-      }
-  
     public List<FeedBackDto> getAllFeedBack(int page) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "dateCreate"));
         return feedBackRepository.findAll(pageable).stream()
