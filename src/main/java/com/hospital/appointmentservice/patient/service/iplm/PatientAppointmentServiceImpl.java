@@ -1,6 +1,7 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.hospital.appointmentservice.admin.model.Doctor;
 import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
+import com.hospital.appointmentservice.patient.dto.AppointmentDto;
 import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
@@ -43,7 +45,7 @@ public class PatientAppointmentServiceImpl implements PatientAppointmentService{
     private DoctorRepository doctorRepository;
 
     @Override
-    public void createAppointment(String username, AppointmentRequestDto dto) {
+    public Appointment createAppointment(String username, AppointmentRequestDto dto) {
         Patient patient = patientRepository.findByUser_Username(username);
         if (patient == null) {
             throw new RuntimeException("Paitent not found!");
@@ -65,7 +67,33 @@ public class PatientAppointmentServiceImpl implements PatientAppointmentService{
         appointment.setStatus("Pending");
 
        appointmentRepository.save(appointment);
+        return appointment;
+    }
 
+    @Override 
+    public AppointmentDto getAppointmentDetailById(UUID appointmentId , String username ){
+        Patient patient = patientRepository.findByUser_Username(username);
+        if(patient == null ){
+            throw new RuntimeException("Không tìm thấy bệnh nhân!");
+        }
+        Appointment appointment = getAppointmentById(appointmentId);
+
+        if(appointment == null){
+            throw new RuntimeException("Không tìm thấy lịch hẹn!");
+        }
+
+        if(!appointment.getPatient().getId().equals(patient.getId())){
+            throw new RuntimeException("Bạn không có quyền xem lịch hẹn này!");
+        }
+
+        AppointmentDto dto = new AppointmentDto();
+        dto.setId(appointment.getId());
+        dto.setPatientName(patient.getFullName());
+        dto.setDoctorName(appointment.getDoctor().getFullName());
+        dto.setRoomName(appointment.getRoom() != null ? appointment.getRoom().getName() : "Chưa có phòng!");
+        dto.setScheduledTime(appointment.getScheduledTime().toString());
+        dto.setStatus(appointment.getStatus()); 
+        return dto ;
     }
 
     @Override 
@@ -76,7 +104,7 @@ public class PatientAppointmentServiceImpl implements PatientAppointmentService{
             throw new RuntimeException("Không có quyền sửa lịch hẹn này!");
         }
 
-        if(newTime == null || newTime.isBefore(LocalDateTime.now())){
+        if(newTime == null || newTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")))){
             throw new RuntimeException("Thời gian không hợp lệ");
         }
 

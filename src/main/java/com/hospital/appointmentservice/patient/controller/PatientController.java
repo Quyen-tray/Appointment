@@ -64,7 +64,6 @@ public class PatientController {
     @GetMapping("/my-appointment")
     public ResponseEntity<?> getMyAppointments(Principal principal) {
        String username = principal.getName();
-    //    String username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
         if (patient == null) {
@@ -88,9 +87,9 @@ public class PatientController {
 
         return ResponseEntity.ok(dtos);
     }
-    @PostMapping("/reject-appointment")
-    public ResponseEntity<?> rejectAppointment(@RequestParam UUID appointmentId, Principal principal) {
-        // đăng nhập thì bỏ cmt
+    @PatchMapping("/reject-appointment/{appointmentId}")
+    public ResponseEntity<?> rejectAppointment(@PathVariable UUID appointmentId, Principal principal) {
+
         if(principal == null){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập!");
         }
@@ -119,27 +118,41 @@ public class PatientController {
 
     }
 
-    @PostMapping("/appointments")
+    @PostMapping("/book-appointments")
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequestDto dto, Principal principal) {
 
         try {
              String username = principal.getName(); // lấy từ token / session
          //   String username = "patient01";
-            appointmentService.createAppointment(username, dto);
-            return ResponseEntity.ok("Đã đăng ký thành công!");
+          Appointment appointment = appointmentService.createAppointment(username, dto);
+            AppointmentBookingResponeDto respone = new AppointmentBookingResponeDto("Đã đặt lịch thành công!"
+                                                                                            , appointment.getId());
+
+            return ResponseEntity.ok(respone);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/my-appointment/{id}")
+
+    @GetMapping("/appointment-detail/{id}")
+    public ResponseEntity<?> getAppointmentDetailById(@PathVariable UUID id , Principal principal){
+        if(principal == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bạn chưa đăng nhập!");
+        }
+
+        String username = principal.getName();
+        try{
+            AppointmentDto dto = appointmentService.getAppointmentDetailById(id, username);
+            return ResponseEntity.ok(dto);
+        }catch(Exception ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+    @PutMapping("/updateTime-appointment/{id}")
     public ResponseEntity<?> updateAppointmentTime( @PathVariable UUID id ,@RequestBody AppointmentUpdateTimeDto dto , Principal principal ){
 
-        //có đăng nhập dùng principal
-         String username = principal.getName();
-     //   String username = "patient01";
-        //  String username = principal.getName();
-        username = "patient01";
+        String username = principal.getName();
         Patient patient = patientRepository.findByUser_Username(username);
 
         if(patient == null){
