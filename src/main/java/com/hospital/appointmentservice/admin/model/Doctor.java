@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,7 @@ public class Doctor {
     private String licenseNo;
 
     @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
      public String getFullName() {

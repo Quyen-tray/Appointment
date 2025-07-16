@@ -19,7 +19,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final PatientRepository patientRepository;
 
-    
+
     public UserController(JwtUtil jwtUtil, PatientRepository patientRepository) {
         this.jwtUtil = jwtUtil;
         this.patientRepository = patientRepository;
@@ -33,21 +33,13 @@ public class UserController {
         }
         String token = authorization.substring("Bearer ".length());
         Claims user = jwtUtil.getAllClaims(token);
-        String userId = user.get("id", String.class);
-        String patientId = null;
-        try {
-            Patient patient = patientRepository.findByUser_Id(UUID.fromString(userId)).orElse(null);
-            if (patient != null) {
-                patientId = patient.getId().toString();
-            }
-        } catch (Exception e) {
-            System.out.println("❌ Không tìm thấy patient theo userId: " + e.getMessage());
-        }
+        String userIdStr = user.get("id", String.class);
+        UUID userId = UUID.fromString(userIdStr);
+
         UserAccountDto userDto = new UserAccountDto();
         userDto.setUsername(user.getSubject());
-        userDto.setId(user.get("id", String.class));
+        userDto.setId(userId);
         userDto.setRoles(user.get("role", String.class));
-        userDto.setPatientId(patientId);
         return ResponseEntity.ok(userDto);
     }
 }

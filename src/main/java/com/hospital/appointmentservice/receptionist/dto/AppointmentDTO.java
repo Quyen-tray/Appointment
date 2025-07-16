@@ -26,18 +26,11 @@ public class AppointmentDTO {
     @NotNull
     private Instant scheduledTime;
 
-    private String status;
-
-    @NotNull
-    private UUID createdById;
-
     @Size(max = 50)
     private String createdRole;
 
-    private UUID approvedById;
 
     @Size(max = 50)
     private String approvalStatus;
 
-    private Instant approvedAt;
 }
