@@ -35,6 +35,7 @@ public class PatientServiceIplm implements PatientService {
     public PatientServiceIplm(PasswordEncoder passwordEncoder,PatientRepository patientRepository,
                               MedicalVisitRepository medicalVisitRepository,
                               AuthService authService) {
+
          this.passwordEncoder = passwordEncoder;
         this.patientRepository = patientRepository;
         this.medicalVisitRepository = medicalVisitRepository;
@@ -114,6 +115,8 @@ public class PatientServiceIplm implements PatientService {
     public Boolean existsPatientByEmail(String email) {
         return patientRepository.existsPatientByEmail(email);
     }
+
+
 
     public PatientProfileDto getProfileByUserName(String username){
         Patient patient = patientRepository.findByUser_Username(username);

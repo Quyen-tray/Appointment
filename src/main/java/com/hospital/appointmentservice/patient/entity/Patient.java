@@ -48,7 +48,6 @@ public class Patient {
     private String phone;
 
     @Nationalized
-    @Lob
     @Column(name = "email")
     private String email;
 
@@ -66,8 +65,10 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MedicalVisit> medicalVisits = new LinkedHashSet<>();
-@Nationalized
-@Lob
-@Column(name = "address")
-private String address;
+
+    @Nationalized
+    @Lob
+    @Column(name = "address")
+    private String address;
+
 }
