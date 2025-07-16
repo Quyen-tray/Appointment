@@ -17,7 +17,6 @@ public interface PatientAppointmentService {
 
     AppointmentDto getAppointmentDetailById(UUID appointmentId, String username);
 
-
     // Lưu thay đổi của lịch hẹn 
     void saveAppointment(Appointment appointment);
 
