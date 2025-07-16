@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FeedBackService {
-    List<FeedBackDto> getAllFeedBack(int page );
+    List<FeedBackDto> getAllFeedBack(int page, int size );
     FeedBackDto getFeedBackById(UUID id);
     List<FeedBackDto> getFeedBackByPatientId(UUID patientId);
     List<FeedBackDto> getFeedBackByDoctorId(UUID doctorId);

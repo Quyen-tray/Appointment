@@ -66,9 +66,6 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MedicalVisit> medicalVisits = new LinkedHashSet<>();
-
-
-UPDATE
 @Nationalized
 @Lob
 @Column(name = "address")

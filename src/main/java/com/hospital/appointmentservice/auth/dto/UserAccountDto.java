@@ -5,10 +5,14 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Data
 @Getter
 @Setter
 public class UserAccountDto {
+    private String patientId;
+    private String id;
     private String username;
     private String password;
     private String email;
