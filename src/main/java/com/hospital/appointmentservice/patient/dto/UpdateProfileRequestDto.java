@@ -12,7 +12,5 @@ public class UpdateProfileRequestDto {
     private String gender ;
     private LocalDate dob;
     private String avatar ;
-
-    private String oldPassword ;
-    private String newPassword ;
+    private String address;
 }

@@ -183,7 +183,6 @@ public class PatientController {
     @PutMapping("/update-profile")
     public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto , Principal principal){
         try{
-            // String username = "patient01";
            String username = principal.getName();
             patientService.updateProfile(username, dto);
             return ResponseEntity.ok("Cập nhật thành công!");
