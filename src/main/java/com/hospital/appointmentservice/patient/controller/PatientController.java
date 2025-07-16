@@ -14,10 +14,12 @@ import com.hospital.appointmentservice.patient.service.MedicalVisitService;
 import com.hospital.appointmentservice.patient.service.PatientAppointmentService;
 import com.hospital.appointmentservice.patient.service.PatientService;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -205,8 +207,10 @@ public class PatientController {
     }
 
     @GetMapping("/invoices/{id}")
-    public ResponseEntity<List<InvoiceDto>> getInvoicesOfPatient(@PathVariable("id") UUID id) {
-        List<InvoiceDto> invoices = invoiceService.getInvoicesByPatientId(id);
+    public ResponseEntity<List<InvoiceDto>> getInvoicesOfPatient(@PathVariable("id") UUID id,
+                                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+                                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+        List<InvoiceDto> invoices = invoiceService.getInvoicesByPatientId(id, fromDate, toDate);
         if (invoices == null || invoices.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -216,6 +220,20 @@ public class PatientController {
     private PatientRepository PatientRepository;
     @Autowired
     private MedicalVisitService medicalVisitService;
+
+    @PutMapping("/pay/{invoiceId}")
+    public ResponseEntity<?> payInvoice(@PathVariable UUID invoiceId, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bạn chưa đăng nhập!");
+        }
+
+        boolean success = invoiceService.payInvoice(invoiceId);
+        if (!success) {
+            return ResponseEntity.badRequest().body("Không thể thanh toán hóa đơn này.");
+        }
+
+        return ResponseEntity.ok("Thanh toán thành công!");
+    }
 
     @GetMapping("/by-user/{userId}")
     public ResponseEntity<?> getPatientByUserId(@PathVariable("userId") UUID userId) {

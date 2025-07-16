@@ -16,4 +16,5 @@ Patient findByUser_Username(String username);
     @EntityGraph(attributePaths = {"medicalVisits"})
     Optional<Patient> findWithVisitsById(UUID id);
     List<Patient> findAllByUser_Id(UUID userId);
+    Optional<Patient> findByUser_Id(UUID userId);
 }

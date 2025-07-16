@@ -11,6 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UserAccountDto {
+    private String patientId;
     private String id;
     private String username;
     private String password;
