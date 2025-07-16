@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.auth.model;
 
+import com.hospital.appointmentservice.admin.model.Staff;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.admin.model.Appointment;
 import jakarta.persistence.*;
@@ -23,7 +24,6 @@ public class UserAccount {
     private UUID id;
 
     @Nationalized
-    @Lob
     @Column(name = "username")
     private String username;
 
@@ -51,8 +51,8 @@ public class UserAccount {
     @OneToMany(mappedBy = "user")
     private Set<Patient> patients = new LinkedHashSet<>();
 
-//    @OneToOne(mappedBy = "userAccount")
-//    private Staff staff;
+    @OneToOne(mappedBy = "userAccount")
+    private Staff staff;
 
 
 }

@@ -11,6 +11,7 @@ import com.hospital.appointmentservice.patient.entity.MedicalVisit;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.repository.MedicalVisitRepository;
 import com.hospital.appointmentservice.patient.service.PatientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +32,16 @@ public class PatientServiceIplm implements PatientService {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     @Autowired
-    public PatientServiceIplm(PatientRepository patientRepository,
+    public PatientServiceIplm(PasswordEncoder passwordEncoder,PatientRepository patientRepository,
                               MedicalVisitRepository medicalVisitRepository,
                               AuthService authService) {
+
+         this.passwordEncoder = passwordEncoder;
         this.patientRepository = patientRepository;
         this.medicalVisitRepository = medicalVisitRepository;
         this.authService = authService;
-        this.passwordEncoder = passwordEncoder;
     }
-
+  
     @Override
     public List<PatientDto> getPatients() {
         return patientRepository.findAll().stream()
@@ -113,6 +115,8 @@ public class PatientServiceIplm implements PatientService {
     public Boolean existsPatientByEmail(String email) {
         return patientRepository.existsPatientByEmail(email);
     }
+
+
 
     public PatientProfileDto getProfileByUserName(String username){
         Patient patient = patientRepository.findByUser_Username(username);

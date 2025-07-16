@@ -15,7 +15,6 @@ import java.util.UUID;
 @Entity
 public class Receptionist {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "staff_id", nullable = false)
     private UUID id;
 
