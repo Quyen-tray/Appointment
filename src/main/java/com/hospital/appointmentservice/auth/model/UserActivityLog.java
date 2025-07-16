@@ -29,7 +29,6 @@ public class UserActivityLog {
     private String method;
 
     @NotNull
-    @Lob
     @Column(name = "endpoint", nullable = false)
     private String endpoint;
 

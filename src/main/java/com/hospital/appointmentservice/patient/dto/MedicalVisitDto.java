@@ -14,5 +14,6 @@ public class MedicalVisitDto {
     private String diagnosis;
     private String note;
     private String createdAt;
+    private String doctorName;
 
 }

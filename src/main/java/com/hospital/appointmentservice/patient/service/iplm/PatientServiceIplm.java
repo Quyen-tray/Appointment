@@ -35,6 +35,7 @@ public class PatientServiceIplm implements PatientService {
     public PatientServiceIplm(PasswordEncoder passwordEncoder,PatientRepository patientRepository,
                               MedicalVisitRepository medicalVisitRepository,
                               AuthService authService) {
+
          this.passwordEncoder = passwordEncoder;
         this.patientRepository = patientRepository;
         this.medicalVisitRepository = medicalVisitRepository;

@@ -38,7 +38,7 @@ public class Room {
     private String roomType;
 
     @OneToMany(mappedBy = "room")
-    private Set<Appointment> appointments = new LinkedHashSet<>();
+    private Set<Appointment> appointment = new LinkedHashSet<>();
 
     //UPDATE
     @Column(name = "room_number")

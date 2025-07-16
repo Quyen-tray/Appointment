@@ -22,8 +22,12 @@ public class FeedBackController {
 
 
     @GetMapping
-    public ResponseEntity<List<FeedBackDto>> getAllFeedBacks(@RequestParam int page) {
-        return ResponseEntity.ok(feedBackService.getAllFeedBack(page));
+    public ResponseEntity<List<FeedBackDto>> getAllFeedBacks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        List<FeedBackDto> dtos = feedBackService.getAllFeedBack(page, size);
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
