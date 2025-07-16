@@ -40,5 +40,17 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private Set<Appointment> appointment = new LinkedHashSet<>();
 
+    //UPDATE
+    @Column(name = "room_number")
+    private String roomNumber;
+
+    @Column(name = "floor")
+    private Integer floor;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "description")
+    private String description;
 
 }

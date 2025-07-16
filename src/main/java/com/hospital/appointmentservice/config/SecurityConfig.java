@@ -38,6 +38,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/auth/login").permitAll()
                         .anyRequest().permitAll()
                 ).logout(AbstractHttpConfigurer::disable
+
                 ).rememberMe(customizer->customizer
                         .key("remember-me-key")
                         .tokenValiditySeconds(1209600)
@@ -50,7 +51,7 @@ public class SecurityConfig  {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
