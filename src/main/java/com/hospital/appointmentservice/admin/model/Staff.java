@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.admin.model;
 
+import com.hospital.appointmentservice.auth.model.UserAccount;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -14,13 +15,13 @@ import java.util.UUID;
 @Entity
 public class Staff {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "staff_id", nullable = false)
+    @Column(name = "staff_id")
     private UUID id;
 
-//    @OneToOne(fetch = FetchType.LAZY, optional = false)
-//     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-//     private UserAccount userAccount;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId
+    @JoinColumn(name = "staff_id")
+    private UserAccount userAccount;
 
 
     @Nationalized
