@@ -4,7 +4,7 @@ import com.hospital.appointmentservice.auth.service.AuthService;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
 import com.hospital.appointmentservice.patient.dto.PatientProfileDto;
 import com.hospital.appointmentservice.patient.dto.UpdateProfileRequestDto;
-
+import com.hospital.appointmentservice.patient.dto.ChangePasswordRequestDto;
 import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.entity.MedicalVisit;
@@ -35,13 +35,12 @@ public class PatientServiceIplm implements PatientService {
     public PatientServiceIplm(PasswordEncoder passwordEncoder,PatientRepository patientRepository,
                               MedicalVisitRepository medicalVisitRepository,
                               AuthService authService) {
-
          this.passwordEncoder = passwordEncoder;
         this.patientRepository = patientRepository;
         this.medicalVisitRepository = medicalVisitRepository;
         this.authService = authService;
     }
-  
+
     @Override
     public List<PatientDto> getPatients() {
         return patientRepository.findAll().stream()
@@ -117,9 +116,9 @@ public class PatientServiceIplm implements PatientService {
     }
 
     @Override
-    public PatientProfileDto getProfileByUserName(String username){
+    public PatientProfileDto getProfileByUserName(String username) {
         Patient patient = patientRepository.findByUser_Username(username);
-        if(patient == null ){
+        if (patient == null) {
             throw new RuntimeException("Không tìm thấy bệnh nhân!");
         }
 
@@ -131,31 +130,31 @@ public class PatientServiceIplm implements PatientService {
         dto.setDob(patient.getDob());
         dto.setAddress(patient.getAddress());
         dto.setAvatar(patient.getAvatar());
-        return dto ;
+        return dto;
     }
 
     @Override
-    public void updateProfile(String username , UpdateProfileRequestDto dto){
+    public void updateProfile(String username, UpdateProfileRequestDto dto) {
         Patient patient = patientRepository.findByUser_Username(username);
-        if(patient == null){
+        if (patient == null) {
             throw new RuntimeException("Không tìm thấy bệnh nhân!");
         }
-        if(dto.getName() != null){
+        if (dto.getName() != null) {
             patient.setFullName(dto.getName().trim());
         }
-        if(dto.getEmail() != null){
+        if (dto.getEmail() != null) {
             patient.setEmail(dto.getEmail().trim());
         }
-        if(dto.getGender() != null ){
+        if (dto.getGender() != null) {
             patient.setGender(dto.getGender().trim());
         }
-        if(dto.getDob() != null){
+        if (dto.getDob() != null) {
             patient.setDob(dto.getDob());
         }
-        if(dto.getAvatar() != null){
+        if (dto.getAvatar() != null) {
             patient.setAvatar(dto.getAvatar().trim());
         }
-        if(dto.getAddress() != null){
+        if (dto.getAddress() != null) {
             patient.setAddress(dto.getAddress().trim());
         }
 
@@ -187,5 +186,47 @@ public class PatientServiceIplm implements PatientService {
             dtos.add(mvDto);
         }
         return dtos;
+    }
+
+    @Override
+    public void changePasswordRequest(String username , ChangePasswordRequestDto request){
+
+        Patient patient = patientRepository.findByUser_Username(username);
+        if(patient == null){
+            throw new RuntimeException("Không tìm thấy bệnh nhân!");
+        }
+
+        String currentEndCodedPassword = patient.getUser().getPasswordHash();
+
+        //check oldpasswork
+        if(!passwordEncoder.matches(request.getOldPassword(), currentEndCodedPassword)){
+            throw new IllegalArgumentException("Mật khẩu cũ không đúng!");
+        }
+
+        //check input blank
+        String newPassword = request.getNewPassword();
+        if(newPassword == null || newPassword.isBlank()){
+            throw new IllegalArgumentException("Mật khẩu mới được bỏ trống!");
+        }
+
+        //check newpassword must diffirent oldpassword
+        if(request.getOldPassword().equals(newPassword)){
+            throw new IllegalArgumentException("Mật khẩu mới không được trùng mật khẩu cũ!");
+        }
+
+        //check strong newpassword
+        if(!newPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d)(?=.*[@$!%*?&])[A-Za-z\\\\d@$!%*?&]{8,}$")){
+            throw new IllegalArgumentException("Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+        }
+
+        //check confirm newpassword
+        if(!newPassword.equals(request.getConfirmPassword())){
+            throw new IllegalArgumentException("Mật khẩu xác nhận không khớp!");
+        }
+
+        //update password
+        String newEncodedPassword = passwordEncoder.encode(newPassword);
+        patient.getUser().setPasswordHash(newEncodedPassword);
+        patientRepository.save(patient);
     }
 }

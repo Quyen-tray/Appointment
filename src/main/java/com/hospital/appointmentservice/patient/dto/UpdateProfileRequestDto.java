@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class UpdateProfileRequestDto {
-    private String name ;
+    private String name;
     private String email;
     private String phone;
-    private String gender ;
+    private String gender;
     private LocalDate dob;
-    private String avatar ;
+    private String avatar;
     private String address;
 }
