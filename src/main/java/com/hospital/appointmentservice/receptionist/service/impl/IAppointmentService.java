@@ -1,7 +1,7 @@
 package com.hospital.appointmentservice.receptionist.service.impl;
 
 import com.hospital.appointmentservice.receptionist.dto.AppointmentDTO;
-import com.hospital.appointmentservice.receptionist.entity.Appointment;
+import com.hospital.appointmentservice.admin.model.Appointment;
 
 import java.util.UUID;
 

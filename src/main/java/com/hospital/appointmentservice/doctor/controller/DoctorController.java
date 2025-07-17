@@ -3,6 +3,7 @@ package com.hospital.appointmentservice.doctor.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.hospital.appointmentservice.admin.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hospital.appointmentservice.admin.model.Doctor;
 import com.hospital.appointmentservice.doctor.dto.DoctorDetailDto;
 import com.hospital.appointmentservice.doctor.dto.DoctorListDto;
-import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import com.hospital.appointmentservice.doctor.service.DoctorService;
 
 @RestController
