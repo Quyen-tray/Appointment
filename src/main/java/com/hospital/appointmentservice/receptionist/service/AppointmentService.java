@@ -2,10 +2,10 @@ package com.hospital.appointmentservice.receptionist.service;
 
 import com.hospital.appointmentservice.admin.repository.DoctorRepository;
 import com.hospital.appointmentservice.admin.repository.RoomRepository;
+import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentDTO;
-import com.hospital.appointmentservice.receptionist.entity.Appointment;
-import com.hospital.appointmentservice.receptionist.repository.AppointmentRepository;
+import com.hospital.appointmentservice.admin.model.Appointment;
 import com.hospital.appointmentservice.receptionist.service.impl.IAppointmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;

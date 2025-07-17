@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -24,7 +25,7 @@ public class AppointmentDTO {
     private UUID roomId;
 
     @NotNull
-    private Instant scheduledTime;
+    private LocalDateTime scheduledTime;
 
     private String status;
 

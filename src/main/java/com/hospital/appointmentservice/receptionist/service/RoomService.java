@@ -1,8 +1,8 @@
 package com.hospital.appointmentservice.receptionist.service;
 
+import com.hospital.appointmentservice.admin.repository.RoomRepository;
 import com.hospital.appointmentservice.receptionist.dto.RoomResponseDTO;
 import com.hospital.appointmentservice.admin.model.Room;
-import com.hospital.appointmentservice.receptionist.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
