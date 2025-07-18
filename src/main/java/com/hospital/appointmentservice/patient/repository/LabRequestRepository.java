@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface LabRequestRepository extends JpaRepository<LabRequest, UUID> {
 
     List<LabRequest> findByVisit_Patient_Id(UUID patientId);
+
 }

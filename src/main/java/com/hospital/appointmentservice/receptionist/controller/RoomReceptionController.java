@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 @RestController
 @RequestMapping("/api/rooms")
 @CrossOrigin(origins = "http://localhost:3000")
-public class RoomController {
+public class RoomReceptionController {
 
     @Autowired
     private RoomService roomService;

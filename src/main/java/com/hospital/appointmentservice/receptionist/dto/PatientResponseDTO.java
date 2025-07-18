@@ -17,9 +17,15 @@ public class PatientResponseDTO {
     private String fullName;
     private String email;
     private String phone;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
+
     private String gender;
     private String address;
+
     private List<PatientHistoryDTO> history;
+
+
+    private String latestStatus;
 }

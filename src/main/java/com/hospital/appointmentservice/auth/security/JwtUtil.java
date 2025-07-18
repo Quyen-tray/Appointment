@@ -1,8 +1,11 @@
 package com.hospital.appointmentservice.auth.security;
 
+import com.hospital.appointmentservice.auth.model.UserAccount;
+import com.hospital.appointmentservice.auth.repository.UserAccountRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +17,15 @@ import java.util.Map;
 public class JwtUtil {
     private final static String SECRET = "secretKey";
 
+    @Autowired
+    private UserAccountRepository userAccountRepository;
     //Create token
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();// claims contain additional data for token
-        claims.put("role",userDetails.getAuthorities().iterator().next().getAuthority());
+        String username = userDetails.getUsername();
+        UserAccount user = userAccountRepository.findUserAccountByUsername(username);
+        claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
+        claims.put("id", user.getId().toString());
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())// User name

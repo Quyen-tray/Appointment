@@ -16,6 +16,7 @@ public class MedicalVisitDto {
     private String diagnosis;
     private String note;
     private String createdAt;
+    private String doctorName;
 
 
     // Nếu muốn thêm thông tin tên bác sĩ hoặc thông tin appointment,

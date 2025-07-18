@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class AppointmentUpdateTimeDto {
      private LocalDateTime scheduledTime ;
 }

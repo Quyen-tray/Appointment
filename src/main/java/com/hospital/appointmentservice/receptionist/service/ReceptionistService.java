@@ -8,18 +8,14 @@ import com.hospital.appointmentservice.receptionist.entity.MedicalRecord;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 @Service
 public class ReceptionistService {
@@ -29,61 +25,72 @@ public class ReceptionistService {
 
     public List<PatientResponseDTO> getAllPatients() {
         List<Patient> patients = patientRepository.findAll();
+        return patients.stream().map(this::mapToPatientResponseDTO).collect(Collectors.toList());
+    }
+
+    public Page<PatientResponseDTO> getPatientsPaged(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Patient> patientPage = patientRepository.findAll(pageable);
+
+        List<PatientResponseDTO> dtos = patientPage.getContent()
+                .stream()
+                .map(this::mapToPatientResponseDTO)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, patientPage.getTotalElements());
+    }
+
+    public List<PatientResponseDTO> getPatientsByGender(String gender) {
+        List<Patient> patients = patientRepository.findAllByGender(gender);
+        return patients.stream().map(this::mapToPatientResponseDTO).collect(Collectors.toList());
+    }
+
+    public List<PatientResponseDTO> getPatientsByStatus(String status) {
+        List<Patient> patients = patientRepository.findAll();
+
         List<PatientResponseDTO> dtos = new ArrayList<>();
 
         for (Patient p : patients) {
-            List<PatientHistoryDTO> history = new ArrayList<>();
             Set<Appointment> appointments = p.getAppointments();
+            if (appointments != null && !appointments.isEmpty()) {
+                // Lấy appointment gần nhất
+                Optional<Appointment> latestAppointment = appointments.stream()
+                        .filter(a -> a.getAppointmentDate() != null)
+                        .max(Comparator.comparing(Appointment::getAppointmentDate));
 
-            if (appointments != null) {
-                for (Appointment a : appointments) {
-                    MedicalRecord mr = a.getMedicalRecord();
-                    history.add(new PatientHistoryDTO(
-                            a.getAppointmentDate() != null ? a.getAppointmentDate().toString() : null,
-                            a.getReason(),
-                            a.getStatus(),
-                            mr != null ? mr.getDiagnosis() : null,
-                            mr != null ? mr.getNotes() : null,
-                            (mr != null && mr.getCreatedAt() != null) ? mr.getCreatedAt().toString() : null
-                    ));
+                if (latestAppointment.isPresent() &&
+                        latestAppointment.get().getStatus() != null &&
+                        latestAppointment.get().getStatus().equalsIgnoreCase(status)) {
+
+                    dtos.add(mapToPatientResponseDTO(p));
                 }
             }
-
-            dtos.add(new PatientResponseDTO(
-                    p.getId(),
-                    p.getFullName(),
-                    p.getEmail(),
-                    p.getPhone(),
-                    p.getDob(),
-                    p.getGender(),
-                    p.getAddress(),
-                    history
-            ));
         }
 
         return dtos;
     }
 
+
     public PatientDetailDTO getPatientWithHistory(UUID id) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
-
-        UserAccount user = patient.getUser();
 
         List<PatientHistoryDTO> history = new ArrayList<>();
         Set<Appointment> appointments = patient.getAppointments();
 
         if (appointments != null) {
             for (Appointment a : appointments) {
-                MedicalRecord mr = a.getMedicalRecord();
-                history.add(new PatientHistoryDTO(
-                        a.getAppointmentDate() != null ? a.getAppointmentDate().toString() : null,
-                        a.getReason(),
-                        a.getStatus(),
-                        mr != null ? mr.getDiagnosis() : null,
-                        mr != null ? mr.getNotes() : null,
-                        (mr != null && mr.getCreatedAt() != null) ? mr.getCreatedAt().toString() : null
-                ));
+                // Chỉ thêm vào lịch sử nếu có MedicalRecord (đã khám xong)
+                if (a.getMedicalRecord() != null && "Completed".equalsIgnoreCase(a.getStatus())) {
+                    history.add(new PatientHistoryDTO(
+                            a.getAppointmentDate() != null ? a.getAppointmentDate().toString() : null,
+                            a.getReason(),
+                            a.getStatus(), // Sẽ luôn là "Completed" nếu đúng về logic
+                            a.getMedicalRecord().getDiagnosis(),
+                            a.getMedicalRecord().getNotes(),
+                            (a.getMedicalRecord().getCreatedAt() != null) ? a.getMedicalRecord().getCreatedAt().toString() : null
+                    ));
+                }
             }
         }
 
@@ -99,76 +106,54 @@ public class ReceptionistService {
         );
     }
 
+
     public PatientResponseDTO getPatientById(UUID id) {
         Patient patient = patientRepository.findById(id).orElse(null);
-        if (patient != null) {
-            Set<Appointment> appointments = patient.getAppointments();
-            List<PatientHistoryDTO> history = new ArrayList<>();
-
-            if (appointments != null) {
-                for (Appointment a : appointments) {
-                    MedicalRecord mr = a.getMedicalRecord();
-                    history.add(new PatientHistoryDTO(
-                            a.getAppointmentDate() != null ? a.getAppointmentDate().toString() : null,
-                            a.getReason(),
-                            a.getStatus(),
-                            mr != null ? mr.getDiagnosis() : null,
-                            mr != null ? mr.getNotes() : null,
-                            (mr != null && mr.getCreatedAt() != null) ? mr.getCreatedAt().toString() : null
-                    ));
-                }
-            }
-
-            return new PatientResponseDTO(
-                    patient.getId(),
-                    patient.getFullName(),
-                    patient.getEmail(),
-                    patient.getPhone(),
-                    patient.getDob(),
-                    patient.getGender(),
-                    patient.getAddress(),
-                    history
-            );
-        }
-        return null;
+        return patient != null ? mapToPatientResponseDTO(patient) : null;
     }
 
-    public Page<PatientResponseDTO> getPatientsPaged(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Patient> patientPage = patientRepository.findAll(pageable);
+    private PatientResponseDTO mapToPatientResponseDTO(Patient p) {
+        List<PatientHistoryDTO> history = new ArrayList<>();
+        Set<Appointment> appointments = p.getAppointments();
 
-        List<PatientResponseDTO> dtos = new ArrayList<>();
+        String latestStatus = null;
 
-        for (Patient p : patientPage.getContent()) {
-            List<PatientHistoryDTO> history = new ArrayList<>();
-            Set<Appointment> appointments = p.getAppointments();
+        if (appointments != null && !appointments.isEmpty()) {
+            // Sắp xếp theo ngày gần nhất
+            Optional<Appointment> latestAppointment = appointments.stream()
+                    .filter(a -> a.getAppointmentDate() != null)
+                    .max(Comparator.comparing(Appointment::getAppointmentDate));
 
-            if (appointments != null) {
-                for (Appointment a : appointments) {
-                    MedicalRecord mr = a.getMedicalRecord();
+            if (latestAppointment.isPresent()) {
+                latestStatus = latestAppointment.get().getStatus();
+            }
+
+            for (Appointment a : appointments) {
+                MedicalRecord mr = a.getMedicalRecord();
+                if (mr != null && "Completed".equalsIgnoreCase(a.getStatus())) {
                     history.add(new PatientHistoryDTO(
                             a.getAppointmentDate() != null ? a.getAppointmentDate().toString() : null,
                             a.getReason(),
                             a.getStatus(),
-                            mr != null ? mr.getDiagnosis() : null,
-                            mr != null ? mr.getNotes() : null,
-                            (mr != null && mr.getCreatedAt() != null) ? mr.getCreatedAt().toString() : null
+                            mr.getDiagnosis(),
+                            mr.getNotes(),
+                            (mr.getCreatedAt() != null) ? mr.getCreatedAt().toString() : null
                     ));
                 }
             }
 
-            dtos.add(new PatientResponseDTO(
-                    p.getId(),
-                    p.getFullName(),
-                    p.getEmail(),
-                    p.getPhone(),
-                    p.getDob(),
-                    p.getGender(),
-                    p.getAddress(),
-                    history
-            ));
         }
 
-        return new PageImpl<>(dtos, pageable, patientPage.getTotalElements());
+        return new PatientResponseDTO(
+                p.getId(),
+                p.getFullName(),
+                p.getEmail(),
+                p.getPhone(),
+                p.getDob(),
+                p.getGender(),
+                p.getAddress(),
+                history,
+                latestStatus // cập nhật field mới
+        );
     }
 }

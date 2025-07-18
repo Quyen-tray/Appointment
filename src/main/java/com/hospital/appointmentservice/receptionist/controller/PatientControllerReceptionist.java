@@ -48,4 +48,13 @@ public class PatientControllerReceptionist {
     ) {
         return ResponseEntity.ok(patientService.getPatientsPaged(page, size));
     }
+    @GetMapping("/patients/filter")
+    public ResponseEntity<List<PatientResponseDTO>> getPatientsByGender(@RequestParam String gender) {
+        return ResponseEntity.ok(patientService.getPatientsByGender(gender));
+    }
+    @GetMapping("/patients/status")
+    public ResponseEntity<List<PatientResponseDTO>> getPatientsByStatus(@RequestParam String status) {
+        return ResponseEntity.ok(patientService.getPatientsByStatus(status));
+    }
+
 }
