@@ -116,7 +116,8 @@ public class PatientServiceIplm implements PatientService {
         return patientRepository.existsPatientByEmail(email);
     }
 
-    @Override
+
+
     public PatientProfileDto getProfileByUserName(String username){
         Patient patient = patientRepository.findByUser_Username(username);
         if(patient == null ){
@@ -129,8 +130,6 @@ public class PatientServiceIplm implements PatientService {
         dto.setPhone(patient.getPhone());
         dto.setGender(patient.getGender());
         dto.setDob(patient.getDob());
-        dto.setAddress(patient.getAddress());
-        dto.setAvatar(patient.getAvatar());
         return dto ;
     }
 
@@ -141,24 +140,37 @@ public class PatientServiceIplm implements PatientService {
             throw new RuntimeException("Không tìm thấy bệnh nhân!");
         }
         if(dto.getName() != null){
-            patient.setFullName(dto.getName().trim());
+            patient.setFullName(dto.getName());
         }
         if(dto.getEmail() != null){
-            patient.setEmail(dto.getEmail().trim());
+            patient.setEmail(dto.getEmail());
         }
         if(dto.getGender() != null ){
-            patient.setGender(dto.getGender().trim());
+            patient.setGender(dto.getGender());
         }
         if(dto.getDob() != null){
             patient.setDob(dto.getDob());
         }
         if(dto.getAvatar() != null){
-            patient.setAvatar(dto.getAvatar().trim());
-        }
-        if(dto.getAddress() != null){
-            patient.setAddress(dto.getAddress().trim());
+            patient.setAvatar(dto.getAvatar());
         }
 
+        if(dto.getNewPassword() != null && !dto.getOldPassword().isEmpty()){
+            if(dto.getOldPassword() == null || dto.getOldPassword().isEmpty()){
+                throw new RuntimeException("Vui lòng nhập mật khẩu mới!");
+            }
+
+            //check oldpassword
+            if(!passwordEncoder.matches(dto.getOldPassword(), patient.getUser().getPasswordHash())){
+                throw new RuntimeException("Mật khẩu cũ không đúng!");
+            }
+
+            //encode new pass
+            String newEncoded = passwordEncoder.encode(dto.getNewPassword());
+            patient.getUser().setPasswordHash(newEncoded);
+        }
+
+        //save change 
         patientRepository.save(patient);
     }
 

@@ -1,6 +1,8 @@
 package com.hospital.appointmentservice.patient.dto;
 
 import lombok.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,4 +18,8 @@ public class MedicalVisitDto {
     private String createdAt;
     private String doctorName;
 
+
+    // Nếu muốn thêm thông tin tên bác sĩ hoặc thông tin appointment,
+    // bạn có thể thêm các field như doctorName, appointmentDate,...
+    // và map thêm sau khi Include liên quan.
 }

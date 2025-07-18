@@ -8,13 +8,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "MedicalRecords")
+@Table(name = "MedicalRecords_New")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedicalRecord {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -28,9 +27,9 @@ public class MedicalRecord {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-
     @OneToOne
     @JoinColumn(name = "appointmentId", nullable = false, unique = true)
     private Appointment appointment;
 }
+
 
