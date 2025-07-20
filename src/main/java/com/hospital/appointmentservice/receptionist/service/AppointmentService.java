@@ -1,11 +1,11 @@
 package com.hospital.appointmentservice.receptionist.service;
 
-import com.hospital.appointmentservice.admin.dto.RoomDto;
+import com.hospital.appointmentservice.receptionist.dto.RoomDto;
 import com.hospital.appointmentservice.admin.model.Appointment;
 import com.hospital.appointmentservice.admin.model.Receptionist;
 import com.hospital.appointmentservice.admin.model.Staff;
 import com.hospital.appointmentservice.receptionist.repository.RoomReceptionRepository;
-import com.hospital.appointmentservice.admin.repository.StaffRepository;
+import com.hospital.appointmentservice.receptionist.repository.StaffRepository;
 import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.auth.repository.UserAccountRepository;

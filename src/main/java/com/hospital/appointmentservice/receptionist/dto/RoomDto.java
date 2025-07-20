@@ -1,10 +1,7 @@
-package com.hospital.appointmentservice.admin.dto;
+package com.hospital.appointmentservice.receptionist.dto;
 
 import com.hospital.appointmentservice.admin.model.Department;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
 import java.util.UUID;
 

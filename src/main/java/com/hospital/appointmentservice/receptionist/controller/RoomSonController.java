@@ -1,7 +1,7 @@
 package com.hospital.appointmentservice.receptionist.controller;
 
-import com.hospital.appointmentservice.admin.dto.RoomDto;
-import com.hospital.appointmentservice.admin.service.RoomService;
+import com.hospital.appointmentservice.receptionist.dto.RoomDto;
+import com.hospital.appointmentservice.receptionist.service.impl.RoomService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 // Annotation make field private and final
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoomController {
+public class RoomSonController {
     RoomService roomService;
 
     @GetMapping

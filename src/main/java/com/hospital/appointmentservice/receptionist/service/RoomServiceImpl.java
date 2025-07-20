@@ -1,9 +1,9 @@
-package com.hospital.appointmentservice.admin.service.impl;
+package com.hospital.appointmentservice.receptionist.service;
 
-import com.hospital.appointmentservice.admin.dto.RoomDto;
+import com.hospital.appointmentservice.receptionist.dto.RoomDto;
 import com.hospital.appointmentservice.admin.model.Room;
 import com.hospital.appointmentservice.receptionist.repository.RoomReceptionRepository;
-import com.hospital.appointmentservice.admin.service.RoomService;
+import com.hospital.appointmentservice.receptionist.service.impl.RoomService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
