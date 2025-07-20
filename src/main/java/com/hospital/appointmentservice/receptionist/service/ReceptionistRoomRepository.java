@@ -12,5 +12,3 @@ public interface ReceptionistRoomRepository extends JpaRepository<Room, UUID> {
 
     List<Room> findByRoomType(String roomType);
 }
-
-
