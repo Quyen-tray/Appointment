@@ -72,7 +72,5 @@ public class Appointment {
 
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MedicalRecord medicalRecord;
-    @Column(name = "appointment_date")
-    private LocalDateTime appointmentDate;
 
 }
