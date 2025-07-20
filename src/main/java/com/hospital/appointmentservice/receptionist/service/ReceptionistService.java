@@ -52,10 +52,10 @@ public class ReceptionistService {
         for (Patient p : patients) {
             Set<Appointment> appointments = p.getAppointments();
             if (appointments != null && !appointments.isEmpty()) {
-                // Lấy appointment gần nhất
+                // Lấy appointment gần nhất theo scheduledTime
                 Optional<Appointment> latestAppointment = appointments.stream()
-                        .filter(a -> a.getAppointmentDate() != null)
-                        .max(Comparator.comparing(Appointment::getAppointmentDate));
+                        .filter(a -> a.getScheduledTime() != null)
+                        .max(Comparator.comparing(Appointment::getScheduledTime));
 
                 if (latestAppointment.isPresent() &&
                         latestAppointment.get().getStatus() != null &&
@@ -69,7 +69,6 @@ public class ReceptionistService {
         return dtos;
     }
 
-
     public PatientDetailDTO getPatientWithHistory(UUID id) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
@@ -79,12 +78,11 @@ public class ReceptionistService {
 
         if (appointments != null) {
             for (Appointment a : appointments) {
-                // Chỉ thêm vào lịch sử nếu có MedicalRecord (đã khám xong)
                 if (a.getMedicalRecord() != null && "Completed".equalsIgnoreCase(a.getStatus())) {
                     history.add(new PatientHistoryDTO(
-                            a.getAppointmentDate() != null ? a.getAppointmentDate().toString() : null,
+                            a.getScheduledTime() != null ? a.getScheduledTime().toString() : null,
                             a.getReason(),
-                            a.getStatus(), // Sẽ luôn là "Completed" nếu đúng về logic
+                            a.getStatus(),
                             a.getMedicalRecord().getDiagnosis(),
                             a.getMedicalRecord().getNotes(),
                             (a.getMedicalRecord().getCreatedAt() != null) ? a.getMedicalRecord().getCreatedAt().toString() : null
@@ -105,7 +103,6 @@ public class ReceptionistService {
         );
     }
 
-
     public PatientResponseDTO getPatientById(UUID id) {
         Patient patient = patientRepository.findById(id).orElse(null);
         return patient != null ? mapToPatientResponseDTO(patient) : null;
@@ -118,10 +115,10 @@ public class ReceptionistService {
         String latestStatus = null;
 
         if (appointments != null && !appointments.isEmpty()) {
-            // Sắp xếp theo ngày gần nhất
+            // Sắp xếp theo scheduledTime gần nhất
             Optional<Appointment> latestAppointment = appointments.stream()
-                    .filter(a -> a.getAppointmentDate() != null)
-                    .max(Comparator.comparing(Appointment::getAppointmentDate));
+                    .filter(a -> a.getScheduledTime() != null)
+                    .max(Comparator.comparing(Appointment::getScheduledTime));
 
             if (latestAppointment.isPresent()) {
                 latestStatus = latestAppointment.get().getStatus();
@@ -131,7 +128,7 @@ public class ReceptionistService {
                 MedicalRecord mr = a.getMedicalRecord();
                 if (mr != null && "Completed".equalsIgnoreCase(a.getStatus())) {
                     history.add(new PatientHistoryDTO(
-                            a.getAppointmentDate() != null ? a.getAppointmentDate().toString() : null,
+                            a.getScheduledTime() != null ? a.getScheduledTime().toString() : null,
                             a.getReason(),
                             a.getStatus(),
                             mr.getDiagnosis(),
@@ -152,7 +149,7 @@ public class ReceptionistService {
                 p.getGender(),
                 p.getAddress(),
                 history,
-                latestStatus // cập nhật field mới
+                latestStatus
         );
     }
 }
