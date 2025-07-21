@@ -1,6 +1,6 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
-import com.hospital.appointmentservice.admin.repository.DoctorRepository;
+import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import com.hospital.appointmentservice.patient.service.FeedBackService;
 import com.hospital.appointmentservice.patient.dto.FeedBackDto;
 import com.hospital.appointmentservice.patient.entity.FeedBack;

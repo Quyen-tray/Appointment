@@ -1,4 +1,4 @@
-package com.hospital.appointmentservice.admin.repository;
+package com.hospital.appointmentservice.doctor.repository;
 
 import com.hospital.appointmentservice.admin.model.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;

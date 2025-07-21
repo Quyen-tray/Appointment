@@ -2,7 +2,7 @@ package com.hospital.appointmentservice.doctor.service.Iplm;
 
 import java.util.UUID;
 
-import com.hospital.appointmentservice.admin.repository.DoctorRepository;
+import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
