@@ -157,7 +157,10 @@ public class AppointmentService implements IAppointmentService {
             if(body.getStatus().equals("APPROVED")){
                 appointment.get().setApprovalStatus("APPROVED");
                 appointment.get().setApprovedBy(receptionist);
-                appointment.get().setApprovedAt(Instant.now());
+                ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+                Instant vietnamNow = LocalDateTime.now(zoneId).atZone(zoneId).toInstant();
+
+                appointment.get().setApprovedAt(vietnamNow);
             }
             appointment.get().setStatus(body.getStatus());
             appointmentRepository.save(appointment.get());
@@ -189,7 +192,11 @@ public class AppointmentService implements IAppointmentService {
         appointment.setPatient(patientRepository.findById(appointmentDTO.getPatientId()).orElse(null));
         appointment.setDoctor(doctorRepository.findById(appointmentDTO.getDoctorId()).orElse(null));
         appointment.setRoom(roomRepository.findById(appointmentDTO.getRoomId()).orElse(null));
-        LocalDateTime scheduledTime = LocalDateTime.ofInstant(appointmentDTO.getScheduledTime(), ZoneId.systemDefault());
+        LocalDateTime scheduledTime = LocalDateTime.ofInstant(
+                appointmentDTO.getScheduledTime(),
+                ZoneId.of("Asia/Ho_Chi_Minh")
+        );
+
         appointment.setScheduledTime(scheduledTime);
 
         if (isCreate) {
