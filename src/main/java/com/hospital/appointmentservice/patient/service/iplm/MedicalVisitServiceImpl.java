@@ -29,7 +29,6 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         this.patientRepository = patientRepository;
     }
 
-    // Helper: map entity -> DTO
     private MedicalVisitDto mapToDto(MedicalVisit mv) {
         MedicalVisitDto dto = new MedicalVisitDto();
         dto.setId(mv.getId().toString());
@@ -51,16 +50,10 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         return dto;
     }
 
-    // Helper: map DTO -> entity (cho create/update). Cần load Appointment/Doctor/Patient từ DB nếu cần.
-    // Ví dụ đơn giản chỉ set các trường text; nếu relationship, cần fetch các entity Appointment, Doctor, Patient.
+
     private void mapToEntity(MedicalVisit mv, MedicalVisitDto dto) {
-        // Ví dụ: chỉ set diagnosis, note, createdAt; relationship cần fetch entity khác:
         mv.setDiagnosis(dto.getDiagnosis());
         mv.setNote(dto.getNote());
-        // Nếu createdAt là String và bạn muốn parse:
-        // mv.setCreatedAt(LocalDateTime.parse(dto.getCreatedAt(), dateFormatter));
-        // Relationship: nếu dto.getPatientId()!=null, load Patient entity và set vào mv.setPatient(...)
-        // Cần inject PatientRepository, AppointmentRepository, DoctorRepository nếu muốn create/update relation.
     }
 
 
