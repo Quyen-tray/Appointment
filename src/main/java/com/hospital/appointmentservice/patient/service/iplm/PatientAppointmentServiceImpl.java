@@ -5,15 +5,15 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
-import com.hospital.appointmentservice.admin.repository.DoctorRepository;
+import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hospital.appointmentservice.admin.model.Doctor;
+import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import com.hospital.appointmentservice.patient.dto.AppointmentDto;
 import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
-import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.service.PatientAppointmentService;
 import com.hospital.appointmentservice.admin.model.Appointment;

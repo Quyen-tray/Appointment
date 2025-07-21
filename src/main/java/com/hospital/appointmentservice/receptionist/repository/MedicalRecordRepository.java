@@ -1,4 +1,4 @@
-package com.hospital.appointmentservice.admin.repository;
+package com.hospital.appointmentservice.receptionist.repository;
 
 import com.hospital.appointmentservice.receptionist.entity.MedicalRecord;
 import org.springframework.data.jpa.repository.Query;
