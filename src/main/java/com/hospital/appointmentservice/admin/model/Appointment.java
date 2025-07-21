@@ -19,7 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Appointment {
+public class
+Appointment {
      @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "appointment_id", nullable = false)

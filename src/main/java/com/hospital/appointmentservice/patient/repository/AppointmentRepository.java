@@ -26,11 +26,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment , UUID>
     ORDER BY
       CASE 
         WHEN :isIncreaseScheduleDate = 1 THEN a.scheduled_time
-        ELSE NULL
       END ASC,
       CASE 
         WHEN :isIncreaseScheduleDate = 0 THEN a.scheduled_time
-        ELSE NULL
       END DESC
     """, nativeQuery = true)
     List<Appointment> searchAppointments(
