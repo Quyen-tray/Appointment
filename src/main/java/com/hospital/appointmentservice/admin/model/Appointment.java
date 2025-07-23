@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.hospital.appointmentservice.receptionist.entity.MedicalRecord;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -70,9 +69,5 @@ Appointment {
     //Update
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String reason;
-
-    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private MedicalRecord medicalRecord;
-
 
 }

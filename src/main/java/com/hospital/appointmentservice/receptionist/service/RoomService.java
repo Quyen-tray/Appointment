@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 public class RoomService {
-    // test push lên GitHub
+
     @Autowired
     private RoomReceptionRepository roomRepository;
 
