@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ReceptionistPatientService {
+public class ReceptionistService {
 
     @Autowired
     private PatientRepository patientRepository;

@@ -2,7 +2,7 @@ package com.hospital.appointmentservice.receptionist.controller;
 
 import com.hospital.appointmentservice.receptionist.dto.PatientDetailDTO;
 import com.hospital.appointmentservice.receptionist.dto.PatientResponseDTO;
-import com.hospital.appointmentservice.receptionist.service.ReceptionistPatientService;
+import com.hospital.appointmentservice.receptionist.service.ReceptionistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ import org.springframework.data.domain.Page;
 public class PatientControllerReceptionist {
 
     @Autowired
-    private ReceptionistPatientService patientService;
+    private ReceptionistService patientService;
 
     @GetMapping("/patients")
     public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
