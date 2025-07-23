@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "LabRequest") // Tên bảng chính xác theo DB, chữ hoa/chữ thường tùy cấu hình DB
+@Table(name = "LabRequest") 
 public class LabRequest {
 
     @Id
@@ -30,7 +30,7 @@ public class LabRequest {
     private MedicalVisit visit;
 
     @Column(name = "requested_by")
-    private String requestedBy; // hoặc UUID nếu bạn muốn tham chiếu đến entity khác
+    private String requestedBy; 
 
     @Column(name = "room_id")
     private UUID roomId;
@@ -44,5 +44,4 @@ public class LabRequest {
     @Column(name = "status")
     private String status;
 
-    // Có thể thêm constructor, builder… Lombok đã hỗ trợ
 }

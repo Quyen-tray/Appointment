@@ -1,15 +1,18 @@
 package com.hospital.appointmentservice.receptionist.controller;
 
-
-import com.hospital.appointmentservice.receptionist.service.ReceptionistPatientService;
+import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
+import com.hospital.appointmentservice.receptionist.dto.ReceptionistDto;
+import com.hospital.appointmentservice.receptionist.service.ReceptionistService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/receptionist")
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 // Annotation make field private and final
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReceptionistController {
-    ReceptionistPatientService receptionistService;
+    ReceptionistService receptionistService;
 
     @GetMapping("")
     public ResponseEntity<?> getAllReceptionists() {

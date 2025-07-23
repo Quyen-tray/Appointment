@@ -1,7 +1,6 @@
 package com.hospital.appointmentservice.admin.service;
 
 import com.hospital.appointmentservice.admin.dto.PatientAdminDto;
-import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;

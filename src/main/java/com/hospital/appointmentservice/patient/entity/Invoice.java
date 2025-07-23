@@ -1,7 +1,6 @@
 package com.hospital.appointmentservice.patient.entity;
 
 
-import com.hospital.appointmentservice.patient.entity.Patient;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
