@@ -1,16 +1,10 @@
 package com.hospital.appointmentservice.patient.controller;
-import com.hospital.appointmentservice.patient.dto.AppointmentDto;
-import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
-import com.hospital.appointmentservice.patient.dto.AppointmentUpdateTimeDto;
-import com.hospital.appointmentservice.patient.dto.PatientDto;
-import com.hospital.appointmentservice.patient.dto.PatientProfileDto;
-import com.hospital.appointmentservice.patient.dto.UpdateProfileRequestDto;
+
 import com.hospital.appointmentservice.admin.model.Appointment;
 import com.hospital.appointmentservice.patient.dto.*;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
-import com.hospital.appointmentservice.patient.service.MedicalVisitService;
 import com.hospital.appointmentservice.patient.service.PatientAppointmentService;
 import com.hospital.appointmentservice.patient.service.PatientService;
 import java.security.Principal;
@@ -18,39 +12,24 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.hospital.appointmentservice.patient.service.InvoiceService;
-
-import java.security.Principal;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/patient")
 public class PatientController {
 
-    private final AppointmentRepository appointmentRepository;
     private final PatientService patientService;
     private final InvoiceService invoiceService;
     private final PatientRepository patientRepository;
     private final PatientAppointmentService appointmentService;
 
-
-
-    @Autowired
-    public PatientController(AppointmentRepository appointmentRepository, PatientService patientService, InvoiceService invoiceService, PatientAppointmentService appointmentService,
-                             PatientRepository patientRepository) {
-        this.appointmentRepository = appointmentRepository;
+    public PatientController(AppointmentRepository appointmentRepository, PatientService patientService,
+            InvoiceService invoiceService, PatientAppointmentService appointmentService,
+            PatientRepository patientRepository) {
         this.patientService = patientService;
         this.invoiceService = invoiceService;
         this.appointmentService = appointmentService;
@@ -93,11 +72,10 @@ public class PatientController {
     @PatchMapping("/reject-appointment/{appointmentId}")
     public ResponseEntity<?> rejectAppointment(@PathVariable UUID appointmentId, Principal principal) {
 
-        if(principal == null){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập!");
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập!");
         }
         String username = principal.getName();
-        // String username = "patient01";
         Patient patient = patientRepository.findByUser_Username(username);
 
         if (patient == null) {
@@ -125,11 +103,10 @@ public class PatientController {
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequestDto dto, Principal principal) {
 
         try {
-            String username = principal.getName(); // lấy từ token / session
-         //   String username = "patient01";
-          Appointment appointment = appointmentService.createAppointment(username, dto);
-            AppointmentBookingResponeDto respone = new AppointmentBookingResponeDto("Đã đặt lịch thành công!"
-                                                                                            , appointment.getId());
+            String username = principal.getName();
+            Appointment appointment = appointmentService.createAppointment(username, dto);
+            AppointmentBookingResponeDto respone = new AppointmentBookingResponeDto("Đã đặt lịch thành công!",
+                    appointment.getId());
 
             return ResponseEntity.ok(respone);
         } catch (RuntimeException e) {
@@ -138,21 +115,23 @@ public class PatientController {
     }
 
     @GetMapping("/appointment-detail/{id}")
-    public ResponseEntity<?> getAppointmentDetailById(@PathVariable UUID id , Principal principal){
-        if(principal == null){
+    public ResponseEntity<?> getAppointmentDetailById(@PathVariable UUID id, Principal principal) {
+        if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bạn chưa đăng nhập!");
         }
 
         String username = principal.getName();
-        try{
+        try {
             AppointmentDto dto = appointmentService.getAppointmentDetailById(id, username);
             return ResponseEntity.ok(dto);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
     @PutMapping("/updateTime-appointment/{id}")
-    public ResponseEntity<?> updateAppointmentTime( @PathVariable UUID id ,@RequestBody AppointmentUpdateTimeDto dto , Principal principal ){
+    public ResponseEntity<?> updateAppointmentTime(@PathVariable UUID id, @RequestBody AppointmentUpdateTimeDto dto,
+            Principal principal) {
 
         String username = principal.getName();
         Patient patient = patientRepository.findByUser_Username(username);
@@ -170,7 +149,7 @@ public class PatientController {
         }
     }
 
-    //view profile
+    // view profile
     @GetMapping("/profile")
     public ResponseEntity<?> getProfileByUserName(Principal principal) {
         if (principal == null) {
@@ -181,11 +160,11 @@ public class PatientController {
         return ResponseEntity.ok(profile);
     }
 
-
     @PutMapping("/update-profile")
-    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto , Principal principal){
-        try{
-           String username = principal.getName();
+    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto, Principal principal) {
+        try {
+            System.out.println("==> DTO in Controller: " + dto);
+            String username = principal.getName();
             patientService.updateProfile(username, dto);
             return ResponseEntity.ok("Cập nhật thành công!");
         } catch (RuntimeException ex) {
@@ -193,6 +172,12 @@ public class PatientController {
         }
     }
 
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDto dto, Principal principal) {
+        String username = principal.getName();
+        patientService.changePasswordRequest(username, dto);
+        return ResponseEntity.ok("Đổi mật khẩu thành công!");
+    }
 
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
@@ -206,31 +191,27 @@ public class PatientController {
         return dto != null
                 ? ResponseEntity.ok(dto)
                 : ResponseEntity.notFound().build();
-    } //http://localhost:8081/api/patient/Id
+    }
 
     @GetMapping("/visits/{id}")
     public ResponseEntity<List<MedicalVisitDto>> getVisitsOfPatient(@PathVariable("id") UUID id) {
         List<MedicalVisitDto> visits = patientService.getMedicalVisitsByPatientId(id);
         if (visits == null) {
-            return ResponseEntity.notFound().build(); // patient không tồn tại
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(visits);
     }
 
     @GetMapping("/invoices/{id}")
     public ResponseEntity<List<InvoiceDto>> getInvoicesOfPatient(@PathVariable("id") UUID id,
-                                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-                                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
         List<InvoiceDto> invoices = invoiceService.getInvoicesByPatientId(id, fromDate, toDate);
         if (invoices == null || invoices.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(invoices);
-    } //http://localhost:8081/api/patient/invoices/{patientId}
-    @Autowired
-    private PatientRepository PatientRepository;
-    @Autowired
-    private MedicalVisitService medicalVisitService;
+    } // http://localhost:8081/api/patient/invoices/{patientId}
 
     @PutMapping("/pay/{invoiceId}")
     public ResponseEntity<?> payInvoice(@PathVariable UUID invoiceId, Principal principal) {

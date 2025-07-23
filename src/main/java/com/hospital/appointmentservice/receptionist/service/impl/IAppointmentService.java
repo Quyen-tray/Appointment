@@ -1,13 +1,8 @@
 package com.hospital.appointmentservice.receptionist.service.impl;
 
-import com.hospital.appointmentservice.admin.model.Appointment;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentDTO;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
 import com.hospital.appointmentservice.receptionist.dto.UpdateStatusAppointmentDto;
-import org.springframework.data.repository.query.Param;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 

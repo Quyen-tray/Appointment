@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.admin.controller;
 
-import com.hospital.appointmentservice.admin.dto.PatientAdminDto;
 import com.hospital.appointmentservice.admin.dto.ReceptionistAdminDto;
 import com.hospital.appointmentservice.admin.service.ReceptionistAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
