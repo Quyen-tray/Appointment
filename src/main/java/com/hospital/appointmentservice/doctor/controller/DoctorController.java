@@ -3,6 +3,7 @@ package com.hospital.appointmentservice.doctor.controller;
 import java.util.List;
 import java.util.UUID;
 
+
 import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class DoctorController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
-    
+
     @GetMapping("/list-doctor")
     public ResponseEntity<?> getAllDcotor(){
         try{

@@ -1,7 +1,5 @@
 package com.hospital.appointmentservice.patient.repository;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface AppointmentRepository extends JpaRepository<Appointment , UUID> {
     List<Appointment> findByPatient_Id(UUID patientid);
-
+   
     boolean existsByDoctorAndScheduledTime(Doctor doctor, java.time.LocalDateTime scheduledTime);
 
     @Query(value = """

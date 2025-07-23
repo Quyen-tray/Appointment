@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class PatientProfileDto {
-    private String FullName;
+    private String name;
     private String gender;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;

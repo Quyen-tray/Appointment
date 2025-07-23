@@ -5,7 +5,6 @@ import com.hospital.appointmentservice.patient.entity.MedicalVisit;
 import com.hospital.appointmentservice.patient.repository.MedicalVisitRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.service.MedicalVisitService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 
-    @Autowired
     public MedicalVisitServiceImpl(MedicalVisitRepository medicalVisitRepository,
                                    PatientRepository patientRepository) {
         this.medicalVisitRepository = medicalVisitRepository;

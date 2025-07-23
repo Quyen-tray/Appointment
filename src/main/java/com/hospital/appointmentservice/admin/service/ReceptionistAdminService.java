@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.admin.service;
 
-import com.hospital.appointmentservice.admin.dto.PatientAdminDto;
 import com.hospital.appointmentservice.admin.dto.ReceptionistAdminDto;
 import com.hospital.appointmentservice.admin.model.Staff;
 import org.springframework.data.domain.Page;

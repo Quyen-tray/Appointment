@@ -18,7 +18,6 @@ import com.hospital.appointmentservice.receptionist.dto.AppointmentDTO;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
 import com.hospital.appointmentservice.receptionist.dto.ReceptionistDto;
 import com.hospital.appointmentservice.receptionist.dto.UpdateStatusAppointmentDto;
-import com.hospital.appointmentservice.receptionist.repository.ReceptionistRepository;
 import com.hospital.appointmentservice.receptionist.service.impl.IAppointmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
@@ -41,7 +40,6 @@ public class AppointmentService implements IAppointmentService {
     DoctorRepository doctorRepository;
     RoomReceptionRepository roomRepository;
     UserAccountRepository userAccountRepository;
-    ReceptionistRepository receptionistRepository;
     StaffRepository staffRepository;
 
     @Override
@@ -120,7 +118,6 @@ public class AppointmentService implements IAppointmentService {
 
         return dto;
     }
-
     @Override
     public String createAppointment(AppointmentDTO createAppointmentDTO, String username) {
         UserAccount user = userAccountRepository.findUserAccountByUsername(username);

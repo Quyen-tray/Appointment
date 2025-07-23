@@ -5,7 +5,6 @@ import com.hospital.appointmentservice.patient.dto.*;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
-import com.hospital.appointmentservice.patient.service.MedicalVisitService;
 import com.hospital.appointmentservice.patient.service.PatientAppointmentService;
 import com.hospital.appointmentservice.patient.service.PatientService;
 import java.security.Principal;
@@ -13,7 +12,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +22,14 @@ import com.hospital.appointmentservice.patient.service.InvoiceService;
 @RequestMapping("/api/patient")
 public class PatientController {
 
-    private final AppointmentRepository appointmentRepository;
     private final PatientService patientService;
     private final InvoiceService invoiceService;
     private final PatientRepository patientRepository;
     private final PatientAppointmentService appointmentService;
 
-
-    @Autowired
-    public PatientController(AppointmentRepository appointmentRepository,PatientService patientService, InvoiceService invoiceService, PatientAppointmentService appointmentService,
-                             PatientRepository patientRepository) {
-        this.appointmentRepository = appointmentRepository;
+    public PatientController(AppointmentRepository appointmentRepository, PatientService patientService,
+            InvoiceService invoiceService, PatientAppointmentService appointmentService,
+            PatientRepository patientRepository) {
         this.patientService = patientService;
         this.invoiceService = invoiceService;
         this.appointmentService = appointmentService;
@@ -108,10 +103,10 @@ public class PatientController {
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequestDto dto, Principal principal) {
 
         try {
-             String username = principal.getName();
-          Appointment appointment = appointmentService.createAppointment(username, dto);
-            AppointmentBookingResponeDto respone = new AppointmentBookingResponeDto("Đã đặt lịch thành công!"
-                                                                                            , appointment.getId());
+            String username = principal.getName();
+            Appointment appointment = appointmentService.createAppointment(username, dto);
+            AppointmentBookingResponeDto respone = new AppointmentBookingResponeDto("Đã đặt lịch thành công!",
+                    appointment.getId());
 
             return ResponseEntity.ok(respone);
         } catch (RuntimeException e) {
@@ -168,6 +163,7 @@ public class PatientController {
     @PutMapping("/update-profile")
     public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDto dto, Principal principal) {
         try {
+            System.out.println("==> DTO in Controller: " + dto);
             String username = principal.getName();
             patientService.updateProfile(username, dto);
             return ResponseEntity.ok("Cập nhật thành công!");
@@ -175,8 +171,9 @@ public class PatientController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
- @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDto dto , Principal principal){
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDto dto, Principal principal) {
         String username = principal.getName();
         patientService.changePasswordRequest(username, dto);
         return ResponseEntity.ok("Đổi mật khẩu thành công!");
@@ -207,18 +204,14 @@ public class PatientController {
 
     @GetMapping("/invoices/{id}")
     public ResponseEntity<List<InvoiceDto>> getInvoicesOfPatient(@PathVariable("id") UUID id,
-                                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-                                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
         List<InvoiceDto> invoices = invoiceService.getInvoicesByPatientId(id, fromDate, toDate);
         if (invoices == null || invoices.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(invoices);
-    } //http://localhost:8081/api/patient/invoices/{patientId}
-     @Autowired
-    private PatientRepository PatientRepository;
-    @Autowired
-    private MedicalVisitService medicalVisitService;
+    } // http://localhost:8081/api/patient/invoices/{patientId}
 
     @PutMapping("/pay/{invoiceId}")
     public ResponseEntity<?> payInvoice(@PathVariable UUID invoiceId, Principal principal) {
