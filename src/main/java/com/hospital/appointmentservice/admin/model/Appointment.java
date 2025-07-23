@@ -19,7 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Appointment {
+public class
+Appointment {
      @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "appointment_id", nullable = false)
@@ -73,5 +74,5 @@ public class Appointment {
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MedicalRecord medicalRecord;
 
-    private LocalDateTime appointmentDate;
+
 }

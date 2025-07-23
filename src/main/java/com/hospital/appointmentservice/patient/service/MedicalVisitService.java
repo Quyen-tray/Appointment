@@ -9,7 +9,6 @@ public interface MedicalVisitService {
     List<MedicalVisitDto> getAllVisits();
     MedicalVisitDto getVisitById(UUID id);
     List<MedicalVisitDto> getVisitsByPatientId(UUID patientId);
-    // Nếu cần create/update/delete:
     MedicalVisitDto createVisit(MedicalVisitDto dto);
     MedicalVisitDto updateVisit(UUID id, MedicalVisitDto dto);
     void deleteVisit(UUID id);

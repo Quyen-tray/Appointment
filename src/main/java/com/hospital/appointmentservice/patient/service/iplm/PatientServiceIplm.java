@@ -157,6 +157,9 @@ public class PatientServiceIplm implements PatientService {
         if (dto.getAddress() != null) {
             patient.setAddress(dto.getAddress().trim());
         }
+        if(dto.getPhone() != null){
+            patient.setPhone(dto.getPhone().trim());
+        }
 
         patientRepository.save(patient);
     }

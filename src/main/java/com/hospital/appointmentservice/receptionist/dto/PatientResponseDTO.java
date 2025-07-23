@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,8 +17,15 @@ public class PatientResponseDTO {
     private String fullName;
     private String email;
     private String phone;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
+
     private String gender;
     private String address;
+
+    private List<PatientHistoryDTO> history;
+
+
+    private String latestStatus;
 }

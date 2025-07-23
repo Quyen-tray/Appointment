@@ -19,7 +19,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final PatientRepository patientRepository;
 
-    
+
     public UserController(JwtUtil jwtUtil, PatientRepository patientRepository) {
         this.jwtUtil = jwtUtil;
         this.patientRepository = patientRepository;

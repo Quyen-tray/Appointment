@@ -252,12 +252,10 @@ public class PatientController {
         }
 
         Patient patient = optionalValidPatient.get();
-        // Map sang PatientDto chỉ trả về id, userId, fullName (các trường khác nếu muốn)
         PatientDto dto = new PatientDto();
         dto.setId(patient.getId() != null ? patient.getId().toString() : null);
         dto.setUserId(patient.getUser() != null ? patient.getUser().getId().toString() : null);
         dto.setFullName(patient.getFullName());
-        // Có thể set thêm các trường khác nếu muốn
         return ResponseEntity.ok(dto);
     }
 }
