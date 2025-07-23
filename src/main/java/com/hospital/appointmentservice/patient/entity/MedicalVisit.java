@@ -46,6 +46,11 @@ public class MedicalVisit {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    //Update
+    @Column(name = "status")
+    private String status;
+
 }
 
 
