@@ -20,7 +20,6 @@ public class LabRequestServiceImpl implements LabRequestService {
     @Override
     public List<LabRequestDto> getLabRequestsByPatientId(UUID patientId) {
         List<LabRequest> labRequests = labRequestRepository.findByVisit_Patient_Id(patientId);
-        // Chuyển sang DTO
         return labRequests.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

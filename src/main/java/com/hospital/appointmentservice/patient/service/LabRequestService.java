@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface LabRequestService {
-    /**
-     * Lấy danh sách LabRequest theo patientId
-     */
+
     List<LabRequestDto> getLabRequestsByPatientId(UUID patientId);
 }

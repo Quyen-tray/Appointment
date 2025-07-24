@@ -1,8 +1,8 @@
 package com.hospital.appointmentservice.receptionist.service;
 
-import com.hospital.appointmentservice.admin.repository.ReceptionistRoomRepository;
 import com.hospital.appointmentservice.receptionist.dto.RoomResponseDTO;
 import com.hospital.appointmentservice.admin.model.Room;
+import com.hospital.appointmentservice.receptionist.repository.RoomReceptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +13,11 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 @Service
 public class RoomService {
-    // test push lên GitHub
+
     @Autowired
-    private ReceptionistRoomRepository roomRepository;
+    private RoomReceptionRepository roomRepository;
 
     public List<RoomResponseDTO> getAllRooms() {
         List<Room> rooms = roomRepository.findAll();
@@ -50,5 +49,4 @@ public class RoomService {
         return roomRepository.findAll(pageable)
                 .map(this::convertToDTO);
     }
-
 }

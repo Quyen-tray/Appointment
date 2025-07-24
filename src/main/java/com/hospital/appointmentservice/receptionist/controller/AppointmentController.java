@@ -1,6 +1,6 @@
 package com.hospital.appointmentservice.receptionist.controller;
 
-import com.hospital.appointmentservice.admin.model.Appointment;
+
 import com.hospital.appointmentservice.auth.security.JwtUtil;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentDTO;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
@@ -11,12 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.*;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class AppointmentController {
     @GetMapping("")
     public ResponseEntity<?> getAllAppointments(@RequestParam(required = false) String keyword,
                                                 @RequestParam(required = false) String status,
-                                               @RequestParam(required = false) Boolean isIncreaseScheduleDate) {
+                                                @RequestParam(required = false) Boolean isIncreaseScheduleDate) {
         try {
             List<AppointmentResponse> appointments = appointmentService.getAppointments(keyword, status, isIncreaseScheduleDate);
 
@@ -67,10 +67,10 @@ public class AppointmentController {
             String token = authorization.substring("Bearer ".length());
             Claims userClaims = jwtUtil.getAllClaims(token);
             String username = userClaims.getSubject();
-
             // Gọi service để tạo cuộc hẹn
             String appointment = appointmentService.createAppointment(createAppointmentDTO, username);
             return ResponseEntity.status(HttpStatus.CREATED).body(appointment);
+
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errors in create appointment process: " + e.getMessage());
@@ -91,11 +91,11 @@ public class AppointmentController {
 
             String appointment = appointmentService.updateAppointment(id, updateAppointmentDTO,username);
             return ResponseEntity.ok(appointment);
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errors in update appointment process: " + e.getMessage());
         }
     }
+
 
 
     @DeleteMapping("/delete/{id}")
@@ -127,5 +127,9 @@ public class AppointmentController {
             return ResponseEntity.badRequest().body("Failed to update status: " + e.getMessage());
         }
     }
+
+
+   
+    
 
 }

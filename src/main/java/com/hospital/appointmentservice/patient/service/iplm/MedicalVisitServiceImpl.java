@@ -6,9 +6,14 @@ import com.hospital.appointmentservice.patient.repository.MedicalVisitRepository
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.service.MedicalVisitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +27,12 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 
-    @Autowired
     public MedicalVisitServiceImpl(MedicalVisitRepository medicalVisitRepository,
                                    PatientRepository patientRepository) {
         this.medicalVisitRepository = medicalVisitRepository;
         this.patientRepository = patientRepository;
     }
 
-    // Helper: map entity -> DTO
     private MedicalVisitDto mapToDto(MedicalVisit mv) {
         MedicalVisitDto dto = new MedicalVisitDto();
         dto.setId(mv.getId().toString());
@@ -51,16 +54,10 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         return dto;
     }
 
-    // Helper: map DTO -> entity (cho create/update). Cần load Appointment/Doctor/Patient từ DB nếu cần.
-    // Ví dụ đơn giản chỉ set các trường text; nếu relationship, cần fetch các entity Appointment, Doctor, Patient.
+
     private void mapToEntity(MedicalVisit mv, MedicalVisitDto dto) {
-        // Ví dụ: chỉ set diagnosis, note, createdAt; relationship cần fetch entity khác:
         mv.setDiagnosis(dto.getDiagnosis());
         mv.setNote(dto.getNote());
-        // Nếu createdAt là String và bạn muốn parse:
-        // mv.setCreatedAt(LocalDateTime.parse(dto.getCreatedAt(), dateFormatter));
-        // Relationship: nếu dto.getPatientId()!=null, load Patient entity và set vào mv.setPatient(...)
-        // Cần inject PatientRepository, AppointmentRepository, DoctorRepository nếu muốn create/update relation.
     }
 
 
@@ -87,18 +84,26 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MedicalVisitDto> getVisitsByPatientId(UUID patientId) {
-        // Có thể kiểm tra patient tồn tại:
+    public List<MedicalVisitDto> getVisitsByPatientId(UUID patientId, LocalDate fromDate, LocalDate toDate, int page, int size) {
         if (!patientRepository.existsById(patientId)) {
-            return null;
+            return new ArrayList<>();
         }
-        List<MedicalVisit> list = medicalVisitRepository.findByPatientId(patientId);
+
+        // Xử lý khoảng thời gian nếu được cung cấp
+        LocalDateTime from = fromDate != null ? fromDate.atStartOfDay() : null;
+        LocalDateTime to = toDate != null ? toDate.atTime(23, 59, 59) : null;
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MedicalVisit> resultPage = medicalVisitRepository.findByPatientIdWithDateFilter(patientId, from, to, pageable);
+
         List<MedicalVisitDto> dtos = new ArrayList<>();
-        for (MedicalVisit mv : list) {
+        for (MedicalVisit mv : resultPage.getContent()) {
             dtos.add(mapToDto(mv));
         }
         return dtos;
     }
+
+
 
     @Override
     public MedicalVisitDto createVisit(MedicalVisitDto dto) {

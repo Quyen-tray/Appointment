@@ -8,9 +8,6 @@ import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.FeedBackRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.admin.model.Doctor;
-import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,7 +26,6 @@ public class FeedBackServiceImpl implements FeedBackService {
     private final DoctorRepository doctorRepository;
 
 
-    @Autowired
     public FeedBackServiceImpl(FeedBackRepository feedBackRepository,
                                PatientRepository patientRepository,
                                DoctorRepository doctorRepository) {
