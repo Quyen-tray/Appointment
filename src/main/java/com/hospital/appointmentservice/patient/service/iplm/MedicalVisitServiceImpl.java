@@ -27,7 +27,6 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 
-    @Autowired
     public MedicalVisitServiceImpl(MedicalVisitRepository medicalVisitRepository,
                                    PatientRepository patientRepository) {
         this.medicalVisitRepository = medicalVisitRepository;

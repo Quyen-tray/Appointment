@@ -13,10 +13,9 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 @Service
 public class RoomService {
-    // test push lên GitHub
+
     @Autowired
     private RoomReceptionRepository roomRepository;
 
@@ -50,5 +49,4 @@ public class RoomService {
         return roomRepository.findAll(pageable)
                 .map(this::convertToDTO);
     }
-
 }

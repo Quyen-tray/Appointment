@@ -2,7 +2,6 @@ package com.hospital.appointmentservice.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hospital.appointmentservice.auth.dto.UserAccountDto;
-import com.hospital.appointmentservice.auth.model.UserAccount;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 

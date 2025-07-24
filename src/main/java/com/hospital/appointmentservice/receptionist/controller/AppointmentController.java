@@ -67,10 +67,10 @@ public class AppointmentController {
             String token = authorization.substring("Bearer ".length());
             Claims userClaims = jwtUtil.getAllClaims(token);
             String username = userClaims.getSubject();
-
             // Gọi service để tạo cuộc hẹn
             String appointment = appointmentService.createAppointment(createAppointmentDTO, username);
             return ResponseEntity.status(HttpStatus.CREATED).body(appointment);
+
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errors in create appointment process: " + e.getMessage());
@@ -91,11 +91,11 @@ public class AppointmentController {
 
             String appointment = appointmentService.updateAppointment(id, updateAppointmentDTO,username);
             return ResponseEntity.ok(appointment);
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errors in update appointment process: " + e.getMessage());
         }
     }
+
 
 
     @DeleteMapping("/delete/{id}")
@@ -127,5 +127,9 @@ public class AppointmentController {
             return ResponseEntity.badRequest().body("Failed to update status: " + e.getMessage());
         }
     }
+
+
+   
+    
 
 }

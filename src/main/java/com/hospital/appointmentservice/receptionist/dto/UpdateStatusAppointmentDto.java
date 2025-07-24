@@ -2,8 +2,6 @@ package com.hospital.appointmentservice.receptionist.dto;
 
 import lombok.*;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @ToString

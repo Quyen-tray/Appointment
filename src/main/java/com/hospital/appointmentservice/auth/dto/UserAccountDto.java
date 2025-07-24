@@ -1,12 +1,9 @@
 package com.hospital.appointmentservice.auth.dto;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.UUID;
-
 import java.util.UUID;
 
 @Data
