@@ -23,4 +23,5 @@ Patient findByUser_Username(String username);
     @Query("SELECT DISTINCT p FROM Patient p JOIN p.appointments a WHERE a.status = :status")
     List<Patient> findAllByAppointmentStatus(@Param("status") String status);
 
+    Patient findByEmail(String email);
 }

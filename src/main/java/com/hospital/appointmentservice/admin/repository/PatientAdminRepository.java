@@ -1,13 +1,16 @@
 package com.hospital.appointmentservice.admin.repository;
 
+import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface PatientAdminRepository extends JpaRepository<Patient, UUID>, JpaSpecificationExecutor<Patient> {
     boolean existsPatientByPhone(String phone);
+
 }

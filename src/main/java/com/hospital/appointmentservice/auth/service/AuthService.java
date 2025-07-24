@@ -3,6 +3,9 @@ package com.hospital.appointmentservice.auth.service;
 import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.auth.repository.UserAccountRepository;
+import com.hospital.appointmentservice.patient.entity.Patient;
+import com.hospital.appointmentservice.patient.repository.PatientRepository;
+import com.hospital.appointmentservice.patient.service.PatientService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,17 +14,22 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class AuthService implements UserAccountService {
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PatientRepository patientRepository;
 
     
-    public AuthService(UserAccountRepository userAccountRepository,PasswordEncoder passwordEncoder) {
+    public AuthService(UserAccountRepository userAccountRepository,
+                       PasswordEncoder passwordEncoder,
+                       PatientRepository patientRepository) {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.patientRepository=patientRepository;
     }
 
 
@@ -97,7 +105,9 @@ public class AuthService implements UserAccountService {
     @Override
     public UserAccountDto update(UUID id, UserAccountDto dto) {
         UserAccount existing = userAccountRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
-        existing.setUsername(dto.getUsername());
+        if(!existsByUserName(existing.getUsername())) {
+            existing.setUsername(dto.getUsername());
+        }
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             existing.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         }
@@ -117,5 +127,11 @@ public class AuthService implements UserAccountService {
     @Override
     public UserAccountDto getById(UUID id) {
         return userAccountRepository.findById(id).map(this::toDto).orElseThrow(() -> new RuntimeException("Not found"));
+    }
+
+    @Override
+    public UserAccount getByEmail(String email) throws RuntimeException {
+        Patient patient = patientRepository.findByEmail(email);
+        return patient.getUser();
     }
 }
