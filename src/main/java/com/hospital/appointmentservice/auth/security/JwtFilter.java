@@ -21,7 +21,7 @@ import java.util.List;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    private static final List<String> EXCLUDED_PATHS = List.of("/login", "/register", "/public");
+    private static final List<String> EXCLUDED_PATHS = List.of("/login", "/register", "/public", "/api/patient/contact");
 
     @Autowired private JwtUtil jwtUtil;
     @Autowired private CustomUserDetailsService customUserDetailsService;
