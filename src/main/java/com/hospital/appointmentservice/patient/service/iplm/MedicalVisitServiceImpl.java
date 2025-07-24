@@ -6,9 +6,14 @@ import com.hospital.appointmentservice.patient.repository.MedicalVisitRepository
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.service.MedicalVisitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,18 +85,26 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MedicalVisitDto> getVisitsByPatientId(UUID patientId) {
-        // Có thể kiểm tra patient tồn tại:
+    public List<MedicalVisitDto> getVisitsByPatientId(UUID patientId, LocalDate fromDate, LocalDate toDate, int page, int size) {
         if (!patientRepository.existsById(patientId)) {
-            return null;
+            return new ArrayList<>();
         }
-        List<MedicalVisit> list = medicalVisitRepository.findByPatientId(patientId);
+
+        // Xử lý khoảng thời gian nếu được cung cấp
+        LocalDateTime from = fromDate != null ? fromDate.atStartOfDay() : null;
+        LocalDateTime to = toDate != null ? toDate.atTime(23, 59, 59) : null;
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MedicalVisit> resultPage = medicalVisitRepository.findByPatientIdWithDateFilter(patientId, from, to, pageable);
+
         List<MedicalVisitDto> dtos = new ArrayList<>();
-        for (MedicalVisit mv : list) {
+        for (MedicalVisit mv : resultPage.getContent()) {
             dtos.add(mapToDto(mv));
         }
         return dtos;
     }
+
+
 
     @Override
     public MedicalVisitDto createVisit(MedicalVisitDto dto) {
