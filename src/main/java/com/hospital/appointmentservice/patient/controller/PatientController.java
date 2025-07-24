@@ -10,8 +10,10 @@ import com.hospital.appointmentservice.patient.service.PatientService;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +45,9 @@ public class PatientController {
     }
 
     @GetMapping("/my-appointment")
-    public ResponseEntity<?> getMyAppointments(Principal principal) {
+    public ResponseEntity<?> getMyAppointments(Principal principal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         String username = principal.getName();
         Patient patient = patientRepository.findByUser_Username(username);
 
@@ -51,9 +55,10 @@ public class PatientController {
             return ResponseEntity.notFound().build();
         }
 
-        List<Appointment> list = appointmentService.getAppointmentsByPatientId(patient.getId());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("scheduledTime").descending());
+        Page<Appointment> appointmentPage = appointmentService.getAppointmentsByPatientId(patient.getId(), pageable);
 
-        List<AppointmentDto> dtos = list.stream().map(appointment -> {
+        Page<AppointmentDto> dtoPage = appointmentPage.map(appointment -> {
             AppointmentDto dto = new AppointmentDto();
             dto.setId(appointment.getId());
             dto.setPatientName(username);
@@ -63,10 +68,15 @@ public class PatientController {
             dto.setRoomName(
                     appointment.getRoom() != null ? appointment.getRoom().getRoomName() : "Chưa có phòng!");
             return dto;
+        });
 
-        }).collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        response.put("appointments", dtoPage.getContent());
+        response.put("currentPage", dtoPage.getNumber());
+        response.put("totalItems", dtoPage.getTotalElements());
+        response.put("totalPages", dtoPage.getTotalPages());
 
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/reject-appointment/{appointmentId}")
@@ -88,11 +98,11 @@ public class PatientController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Bạn không có quyền hủy lịch hẹn này");
         }
 
-        if (!"Pending".equalsIgnoreCase(appointment.getStatus())) {
+        if (!"PENDING".equalsIgnoreCase(appointment.getStatus())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Chỉ được hủy lịch hẹn ở trạng thái Pending!");
         }
 
-        appointment.setStatus("Cancelled");
+        appointment.setStatus("CANCELLED");
         appointmentService.saveAppointment(appointment);
 
         return ResponseEntity.ok("Đã hủy lịch hẹn thành công!");

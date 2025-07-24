@@ -36,6 +36,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/patient/contact").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/auth/logout","/api/user").authenticated()
+                        .requestMatchers("/api/patient/**").authenticated()
                         .requestMatchers("/api/auth/login").permitAll()
                         .anyRequest().permitAll()
                 ).logout(AbstractHttpConfigurer::disable

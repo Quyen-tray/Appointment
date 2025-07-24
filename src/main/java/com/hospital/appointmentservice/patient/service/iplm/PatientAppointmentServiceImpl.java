@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,11 @@ public class PatientAppointmentServiceImpl implements PatientAppointmentService 
     @Override
     public Appointment getAppointmentById(UUID appointmentId) {
         return appointmentRepository.findById(appointmentId).orElse(null);
+    }
+
+    @Override
+    public Page<Appointment> getAppointmentsByPatientId(UUID patientId, Pageable pageable) {
+        return appointmentRepository.findByPatient_Id(patientId, pageable);
     }
 
     @Override
@@ -63,7 +71,10 @@ public class PatientAppointmentServiceImpl implements PatientAppointmentService 
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
         appointment.setScheduledTime(dto.getScheduledTime());
-        appointment.setStatus("Pending");
+        appointment.setStatus("PENDING");
+
+        appointment.setCreatedBy(patient.getUser());
+        appointment.setCreatedRole("PATIENT");
 
         appointmentRepository.save(appointment);
         return appointment;
