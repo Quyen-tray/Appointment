@@ -124,6 +124,18 @@ public class AppointmentService implements IAppointmentService {
     @Override
     public String createAppointment(AppointmentDTO createAppointmentDTO, String username) {
         UserAccount user = userAccountRepository.findUserAccountByUsername(username);
+        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+        if (appointmentRepository.existsByScheduledTimeAndRoom_Id(LocalDateTime.ofInstant(createAppointmentDTO.getScheduledTime(), zoneId), createAppointmentDTO.getRoomId())) {
+            throw new IllegalArgumentException("Room is already booked at this time.");
+        }
+
+        if (appointmentRepository.existsByScheduledTimeAndDoctor_Id(LocalDateTime.ofInstant(createAppointmentDTO.getScheduledTime(), zoneId), createAppointmentDTO.getDoctorId())) {
+            throw new IllegalArgumentException("Doctor already has an appointment at this time.");
+        }
+
+        if (appointmentRepository.existsByScheduledTimeAndPatient_Id(LocalDateTime.ofInstant(createAppointmentDTO.getScheduledTime(), zoneId), createAppointmentDTO.getPatientId())) {
+            throw new IllegalArgumentException("Patient already has an appointment at this time.");
+        }
         Appointment appointment = new Appointment();
         return auditAppointment(createAppointmentDTO, appointment, true, user.getId());
     }
@@ -136,6 +148,18 @@ public class AppointmentService implements IAppointmentService {
         UserAccount user = userAccountRepository.findUserAccountByUsername(username);
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found with id: " + id));
+        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+        if (appointmentRepository.existsByScheduledTimeAndRoom_IdAndIdNot(LocalDateTime.ofInstant(updateAppointmentDTO.getScheduledTime(), zoneId), updateAppointmentDTO.getRoomId(), id)) {
+            throw new IllegalArgumentException("Room is already booked at this time.");
+        }
+
+        if (appointmentRepository.existsByScheduledTimeAndDoctor_IdAndIdNot(LocalDateTime.ofInstant(updateAppointmentDTO.getScheduledTime(), zoneId), updateAppointmentDTO.getDoctorId(), id)) {
+            throw new IllegalArgumentException("Doctor already has an appointment at this time.");
+        }
+
+        if (appointmentRepository.existsByScheduledTimeAndPatient_IdAndIdNot(LocalDateTime.ofInstant(updateAppointmentDTO.getScheduledTime(), zoneId), updateAppointmentDTO.getPatientId(), id)) {
+            throw new IllegalArgumentException("Patient already has an appointment at this time.");
+        }
         return auditAppointment(updateAppointmentDTO, appointment, false, user.getId());
     }
 

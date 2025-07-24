@@ -36,4 +36,16 @@ public interface AppointmentRepository extends JpaRepository<Appointment , UUID>
             @Param("status") String status,
             @Param("isIncreaseScheduleDate") Boolean isIncreaseScheduleDate);
 
+    boolean existsByScheduledTimeAndRoom_Id(LocalDateTime scheduledTime, UUID roomId);
+
+    boolean existsByScheduledTimeAndDoctor_Id(LocalDateTime scheduledTime, UUID doctorId);
+
+    boolean existsByScheduledTimeAndPatient_Id(LocalDateTime scheduledTime, UUID patientId);
+
+    // Với update, cần loại trừ chính appointment hiện tại
+    boolean existsByScheduledTimeAndRoom_IdAndIdNot(LocalDateTime scheduledTime, UUID roomId, UUID appointmentId);
+
+    boolean existsByScheduledTimeAndDoctor_IdAndIdNot(LocalDateTime scheduledTime, UUID doctorId, UUID appointmentId);
+
+    boolean existsByScheduledTimeAndPatient_IdAndIdNot(LocalDateTime scheduledTime, UUID patientId, UUID appointmentId);
 }
