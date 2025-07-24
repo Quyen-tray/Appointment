@@ -56,4 +56,25 @@ public class StaffAdminDto {
         this.positionAdminDto = positionAdminDto;
         this.status = status;
     }
+
+    public StaffAdminDto(String fullName, String gender, LocalDate dob, DepartmentAdminDto departmentAdminDto, PositionAdminDto positionAdminDto,  String status) {
+        this.fullName = fullName;
+        this.gender = gender;
+        this.dob = dob;
+        this.departmentAdminDto = departmentAdminDto;
+        this.positionAdminDto = positionAdminDto;
+        this.status = status;
+    }
+
+    public StaffAdminDto(String fullName, String gender, LocalDate dob, String email, DepartmentAdminDto departmentAdminDto, PositionAdminDto positionAdminDto, String status) {
+        this.fullName = fullName;
+        this.gender = gender;
+        this.dob = dob;
+        this.email = email;
+        this.departmentAdminDto = departmentAdminDto;
+        this.positionAdminDto = positionAdminDto;
+        this.status = status;
+    }
+
+
 }

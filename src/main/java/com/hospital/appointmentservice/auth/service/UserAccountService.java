@@ -4,6 +4,7 @@ import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import org.springframework.data.domain.Page;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserAccountService {
@@ -17,4 +18,5 @@ public interface UserAccountService {
     UserAccountDto update(UUID id, UserAccountDto dto);
     void delete(UUID id);
     UserAccountDto getById(UUID id);
+    UserAccount getByEmail(String email);
 }

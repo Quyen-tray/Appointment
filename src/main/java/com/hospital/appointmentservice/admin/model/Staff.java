@@ -25,7 +25,6 @@ public class Staff {
 
 
     @Nationalized
-    @Lob
     @Column(name = "full_name")
     private String fullName;
 
