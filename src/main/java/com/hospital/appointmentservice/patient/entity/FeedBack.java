@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "FeedBack")
+@Table(name = "Feedback")
 public class FeedBack {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

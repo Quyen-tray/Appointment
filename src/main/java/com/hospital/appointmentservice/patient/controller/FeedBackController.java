@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/feedback")
@@ -90,6 +89,7 @@ public class FeedBackController {
             FeedBackDto created = feedBackService.createFeedBack(dto);
             return ResponseEntity.status(201).body(created);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

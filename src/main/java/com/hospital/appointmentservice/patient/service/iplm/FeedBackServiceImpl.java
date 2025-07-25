@@ -25,10 +25,9 @@ public class FeedBackServiceImpl implements FeedBackService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
 
-
     public FeedBackServiceImpl(FeedBackRepository feedBackRepository,
-                               PatientRepository patientRepository,
-                               DoctorRepository doctorRepository) {
+            PatientRepository patientRepository,
+            DoctorRepository doctorRepository) {
         this.feedBackRepository = feedBackRepository;
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
@@ -37,9 +36,9 @@ public class FeedBackServiceImpl implements FeedBackService {
     @Override
     public List<FeedBackDto> getAllFeedBack(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "dateCreate"));
-        return feedBackRepository.findAll(pageable)              // Page<FeedBack>
-                .map(this::mapToDto)            // map từng phần tử
-                .getContent();                  // trả List<DTO>
+        return feedBackRepository.findAll(pageable) // Page<FeedBack>
+                .map(this::mapToDto) // map từng phần tử
+                .getContent(); // trả List<DTO>
     }
 
     @Override
@@ -119,17 +118,19 @@ public class FeedBackServiceImpl implements FeedBackService {
     private FeedBackDto mapToDto(FeedBack entity) {
         FeedBackDto dto = new FeedBackDto();
         dto.setId(entity.getId().toString());
-        if (entity.getPatient() != null){ dto.setPatientId(entity.getPatient().getId().toString());
-        dto.setPatientName(entity.getPatient().getFullName());
-    }else {
-        dto.setPatientName("Ẩn danh");
-    }
-        if (entity.getDoctor() != null){ dto.setDoctorId(entity.getDoctor().getId().toString());
-        dto.setDoctorName(entity.getDoctor().getFullName());
+        if (entity.getPatient() != null) {
+            dto.setPatientId(entity.getPatient().getId().toString());
+            dto.setPatientName(entity.getPatient().getFullName());
+        } else {
+            dto.setPatientName("Ẩn danh");
+        }
+        if (entity.getDoctor() != null) {
+            dto.setDoctorId(entity.getDoctor().getId().toString());
+            dto.setDoctorName(entity.getDoctor().getFullName());
 
-} else {
-        dto.setDoctorName("Không rõ");
-    }
+        } else {
+            dto.setDoctorName("Không rõ");
+        }
         dto.setScore(entity.getScore());
         dto.setComment(entity.getComment());
         dto.setCreated(entity.getDateCreate());
