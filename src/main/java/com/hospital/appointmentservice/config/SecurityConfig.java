@@ -34,6 +34,9 @@ public class SecurityConfig  {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize->authorize
                         .requestMatchers("/api/patient/contact").permitAll()
+                        .requestMatchers("/api/patient/contact/all").permitAll()
+                        .requestMatchers("/api/patient/contact/reply").permitAll()
+                        .requestMatchers("/api/patient/contact/reply-history/{contactId}").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/auth/logout","/api/user").authenticated()
                         .requestMatchers("/api/patient/**").authenticated()

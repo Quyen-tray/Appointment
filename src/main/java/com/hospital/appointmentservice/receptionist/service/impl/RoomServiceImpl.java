@@ -1,9 +1,9 @@
-package com.hospital.appointmentservice.receptionist.service;
+package com.hospital.appointmentservice.receptionist.service.impl;
 
 import com.hospital.appointmentservice.receptionist.dto.RoomDto;
 import com.hospital.appointmentservice.admin.model.Room;
 import com.hospital.appointmentservice.receptionist.repository.RoomReceptionRepository;
-import com.hospital.appointmentservice.receptionist.service.impl.RoomService;
+import com.hospital.appointmentservice.receptionist.service.RoomService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +17,12 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoomServiceImpl implements RoomService {
     RoomReceptionRepository roomRepository;
+
+
+    @Override
+    public List<String> getAllRoomTypes() {
+        return roomRepository.findDistinctRoomTypes();
+    }
 
 
     @Override
