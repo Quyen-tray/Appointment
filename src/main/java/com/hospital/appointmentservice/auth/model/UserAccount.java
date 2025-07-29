@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.auth.model;
 
+import com.hospital.appointmentservice.admin.model.Blog;
 import com.hospital.appointmentservice.admin.model.Staff;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.admin.model.Appointment;
@@ -54,5 +55,7 @@ public class UserAccount {
     @OneToOne(mappedBy = "userAccount")
     private Staff staff;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Blog> blogs = new LinkedHashSet<>();
 
 }

@@ -261,4 +261,13 @@ public class PatientController {
         dto.setFullName(patient.getFullName());
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/invoices/unpaid/{id}")
+    public ResponseEntity<List<InvoiceDto>> getInvoiceUnpaid(@PathVariable("id") UUID id) {
+        List<InvoiceDto> invoices = invoiceService.getUnpaidInvoice(id);
+        if (invoices == null || invoices.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(invoices);
+    }
 }
