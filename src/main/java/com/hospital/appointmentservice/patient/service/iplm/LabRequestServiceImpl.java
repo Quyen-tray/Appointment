@@ -42,6 +42,11 @@ public class LabRequestServiceImpl implements LabRequestService {
         return convertToDto(newLab);
     }
 
+    @Override
+    public void deleteLabRequest(UUID id) {
+        labRequestRepository.deleteById(id);
+    }
+
 
     private LabRequestDto convertToDto(LabRequest lr) {
         return LabRequestDto.builder()

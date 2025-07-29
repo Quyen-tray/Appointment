@@ -32,4 +32,10 @@ public class LabRequestController {
         labRequestService.createNewLabRequest(createLabRequest);
         return ResponseEntity.ok("Create successfully");
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteLabRequest(@PathVariable UUID id) {
+        labRequestService.deleteLabRequest(id);
+        return ResponseEntity.ok("Delete successfully");
+    }
 }

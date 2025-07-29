@@ -10,4 +10,5 @@ public interface LabRequestService {
 
     List<LabRequestDto> getLabRequestsByPatientId(UUID patientId);
     LabRequestDto createNewLabRequest(CreateLabRequest createLabRequest);
+    void deleteLabRequest(UUID id);
 }
