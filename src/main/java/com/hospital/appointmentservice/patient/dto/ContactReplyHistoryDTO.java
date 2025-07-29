@@ -7,15 +7,12 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ContactUsDTO {
+public class ContactReplyHistoryDTO {
     private UUID id;
-    private String name;
-    private String email;
     private String subject;
     private String message;
-    private LocalDateTime createdAt;
-    private boolean replied;
+    private LocalDateTime sentAt;
 }

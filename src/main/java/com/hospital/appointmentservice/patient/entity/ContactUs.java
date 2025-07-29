@@ -40,4 +40,7 @@ public class ContactUs {
         }
         this.createdAt = LocalDateTime.now();
     }
+    @Column(nullable = false)
+    private boolean replied;
+
 }
