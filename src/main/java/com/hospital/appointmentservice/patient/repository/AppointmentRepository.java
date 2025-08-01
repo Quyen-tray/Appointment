@@ -94,7 +94,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
   boolean existsByScheduledTimeAndDoctor_IdAndIdNot(LocalDateTime scheduledTime, UUID doctorId, UUID appointmentId);
 
-    boolean existsByScheduledTimeAndPatient_IdAndIdNot(LocalDateTime scheduledTime, UUID patientId, UUID appointmentId);
 
   @Query("""
     SELECT a FROM Appointment a
