@@ -28,31 +28,8 @@ public class ContactUsController {
             contactUsService.submitContact(dto);
             return ResponseEntity.ok("Gửi liên hệ thành công!");
         } catch (Exception ex) {
-            ex.printStackTrace(); // ✅ In lỗi ra log để dễ debug
+            ex.printStackTrace();
             return ResponseEntity.status(500).body("Gửi liên hệ thất bại: " + ex.getMessage());
         }
-    }
-    @GetMapping("/all")
-    public ResponseEntity<List<ContactUsDTO>> getAllContacts() {
-        List<ContactUsDTO> list = contactUsService.getAllContacts();
-        return ResponseEntity.ok(list);
-    }
-
-    @PostMapping("/reply")
-    @PreAuthorize("hasRole('RECEPTIONIST')")
-    public ResponseEntity<String> replyToContact(@RequestBody ReplyContactDTO dto) {
-        try {
-            contactUsService.replyToContact(dto);
-            return ResponseEntity.ok("Gửi phản hồi thành công!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Lỗi khi gửi phản hồi: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/reply-history/{contactId}")
-    @PreAuthorize("hasRole('RECEPTIONIST')")
-    public ResponseEntity<List<ContactReplyHistoryDTO>> getReplyHistory(@PathVariable UUID contactId) {
-        return ResponseEntity.ok(contactUsService.getReplyHistoryByContactId(contactId));
     }
 }

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatientHistoryDTO {
-    private String appointmentDate;
-    private String reason;
     private String status;
     private String diagnosis;
     private String notes;
