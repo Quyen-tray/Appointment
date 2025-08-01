@@ -1,60 +1,75 @@
 package com.hospital.appointmentservice.receptionist.controller;
 
+import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.receptionist.dto.PatientDetailDTO;
-import com.hospital.appointmentservice.receptionist.dto.PatientResponseDTO;
-import com.hospital.appointmentservice.receptionist.service.ReceptionistService;
+import com.hospital.appointmentservice.receptionist.dto.PatientHistoryDTO;
+import com.hospital.appointmentservice.receptionist.dto.PatientRegisterRequest;
+import com.hospital.appointmentservice.receptionist.dto.PatientUpdateDTO;
+import com.hospital.appointmentservice.receptionist.service.ReceptionistPatientService;
+import com.hospital.appointmentservice.receptionist.service.impl.ReceptionistPatientServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class PatientControllerReceptionist {
+    @Autowired
+    private ReceptionistPatientService receptionistService;
 
     @Autowired
-    private ReceptionistService patientService;
+    private ReceptionistPatientServiceImp patientService;
 
-    @GetMapping("/patients")
-    public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
+    @GetMapping("/all")
+    public ResponseEntity<List<PatientDetailDTO>> getAllPatients() {
         return ResponseEntity.ok(patientService.getAllPatients());
     }
-
-    @GetMapping("/patients/{id}/history")
-    public ResponseEntity<PatientDetailDTO> getPatientHistory(@PathVariable UUID id) {
-        return ResponseEntity.ok(patientService.getPatientWithHistory(id));
+    @GetMapping("/{patientId}/history")
+    public List<PatientHistoryDTO> getPatientHistory(@PathVariable UUID patientId) {
+        return patientService.getPatientHistory(patientId);
     }
+    @PutMapping("/patients/{id}")
+    public ResponseEntity<?> updatePatient(@PathVariable UUID id, @RequestBody PatientUpdateDTO dto) {
+        try {
+            Patient patient = receptionistService.getPatientById(id);
+            if (patient == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy bệnh nhân");
+            }
 
+            // Cập nhật thông tin
+            patient.setFullName(dto.getFullName());
+            patient.setDob(dto.getDob());
+            patient.setGender(dto.getGender());
+            patient.setPhone(dto.getPhone());
+            patient.setEmail(dto.getEmail());
+            patient.setAddress(dto.getAddress());
 
-    @GetMapping("/patients/{id}")
-    public ResponseEntity<PatientResponseDTO> getPatientById(@PathVariable UUID id) {
-        PatientResponseDTO patient = patientService.getPatientById(id);
-        if (patient != null) {
-            return ResponseEntity.ok(patient);
-        } else {
-            return ResponseEntity.notFound().build();
+            receptionistService.savePatient(patient);
+
+            // Trả về DTO (hoặc message)
+            return ResponseEntity.ok("Cập nhật thành công");
+        } catch (Exception e) {
+            e.printStackTrace(); // để log ra lỗi chi tiết
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi cập nhật bệnh nhân");
         }
     }
 
-    @GetMapping("/patients/paged")
-    public ResponseEntity<Page<PatientResponseDTO>> getPatientsPaged(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    ) {
-        return ResponseEntity.ok(patientService.getPatientsPaged(page, size));
+    @PostMapping("/patients")
+    public ResponseEntity<String> createPatient(@RequestBody PatientRegisterRequest request) {
+        try {
+            receptionistService.addNewPatient(request);
+            return ResponseEntity.ok("Thêm bệnh nhân thành công!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi trong quá trình xử lý.");
+        }
     }
-    @GetMapping("/patients/filter")
-    public ResponseEntity<List<PatientResponseDTO>> getPatientsByGender(@RequestParam String gender) {
-        return ResponseEntity.ok(patientService.getPatientsByGender(gender));
-    }
-    @GetMapping("/patients/status")
-    public ResponseEntity<List<PatientResponseDTO>> getPatientsByStatus(@RequestParam String status) {
-        return ResponseEntity.ok(patientService.getPatientsByStatus(status));
-    }
+
 
 }

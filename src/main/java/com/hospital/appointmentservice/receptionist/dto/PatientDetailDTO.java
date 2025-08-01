@@ -23,6 +23,5 @@ public class PatientDetailDTO {
 
     private String gender;
     private String address;
-    private List<PatientHistoryDTO> history;
 }
 
