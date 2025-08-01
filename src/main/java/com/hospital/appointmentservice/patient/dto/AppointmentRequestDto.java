@@ -13,7 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppointmentRequestDto {
-     private UUID doctorId;
-    private LocalDateTime scheduledTime ;
-     
+    private UUID doctorId;
+    private LocalDateTime scheduledTime;
+    private UUID relativeId;
+    private String reason;
 }

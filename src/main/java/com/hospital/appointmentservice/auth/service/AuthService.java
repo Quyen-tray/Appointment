@@ -5,7 +5,6 @@ import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.auth.repository.UserAccountRepository;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
-import com.hospital.appointmentservice.patient.service.PatientService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +13,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

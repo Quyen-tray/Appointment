@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.hospital.appointmentservice.admin.model.Doctor;
 import com.hospital.appointmentservice.admin.model.Appointment;
+import com.hospital.appointmentservice.admin.model.Department;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -19,6 +21,48 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
   Page<Appointment> findByPatient_Id(UUID patientId, Pageable pageable);
 
   boolean existsByDoctorAndScheduledTime(Doctor doctor, java.time.LocalDateTime scheduledTime);
+
+  Page<Appointment> findByPatient_IdAndDoctor_Staff_FullNameContainingIgnoreCase(UUID patientId, String doctorName,
+      Pageable pageable);
+
+  // lọc cho patient history
+  @Query("""
+          SELECT a FROM Appointment a
+          LEFT JOIN a.relative r
+          JOIN a.doctor d
+          JOIN d.staff s
+          WHERE a.patient.id = :patientId
+            AND (:doctorName IS NULL OR LOWER(s.fullName) LIKE LOWER(CONCAT('%', :doctorName, '%')))
+            AND (:startDate IS NULL OR a.scheduledTime >= :startDate)
+            AND (:endDate IS NULL OR a.scheduledTime <= :endDate)
+            AND (:status IS NULL OR a.status = :status)
+            AND (
+              :examiner IS NULL OR :examiner = 'Tất cả' OR
+              (:examiner = 'Bản thân' AND r IS NULL) OR
+              (r IS NOT NULL AND CONCAT(r.fullName, ' (', r.relation, ')') = :examiner)
+            )
+      """)
+  Page<Appointment> findByFilters(
+      @Param("patientId") UUID patientId,
+      @Param("doctorName") String doctorName,
+      @Param("startDate") LocalDateTime startDate,
+      @Param("endDate") LocalDateTime endDate,
+      @Param("status") String status,
+      @Param("examiner") String examiner,
+      Pageable pageable);
+
+  // kiem tra lich cua ban than
+  boolean existsByPatient_IdAndDoctor_Staff_DepartmentAndStatusIn(
+      UUID patientId, Department department, List<String> statuses);
+
+  boolean existsByRelative_IdAndDoctor_Staff_DepartmentAndStatusIn(
+      UUID relativeId, Department department, List<String> statuses);
+
+  // Kiểm tra patient có lịch trùng thời điểm
+  boolean existsByPatient_IdAndScheduledTime(UUID patientId, LocalDateTime time);
+
+  // Kiểm tra relative có lịch trùng thời điểm
+  boolean existsByRelative_IdAndScheduledTime(UUID relativeId, LocalDateTime time);
 
   @Query(value = """
       SELECT a.* FROM appointment a
@@ -39,16 +83,16 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
       @Param("status") String status,
       @Param("isIncreaseScheduleDate") Boolean isIncreaseScheduleDate);
 
-    boolean existsByScheduledTimeAndRoom_Id(LocalDateTime scheduledTime, UUID roomId);
+  boolean existsByScheduledTimeAndRoom_Id(LocalDateTime scheduledTime, UUID roomId);
 
-    boolean existsByScheduledTimeAndDoctor_Id(LocalDateTime scheduledTime, UUID doctorId);
+  boolean existsByScheduledTimeAndDoctor_Id(LocalDateTime scheduledTime, UUID doctorId);
 
-    boolean existsByScheduledTimeAndPatient_Id(LocalDateTime scheduledTime, UUID patientId);
+  boolean existsByScheduledTimeAndPatient_Id(LocalDateTime scheduledTime, UUID patientId);
 
-    // Với update, cần loại trừ chính appointment hiện tại
-    boolean existsByScheduledTimeAndRoom_IdAndIdNot(LocalDateTime scheduledTime, UUID roomId, UUID appointmentId);
+  // Với update, cần loại trừ chính appointment hiện tại
+  boolean existsByScheduledTimeAndRoom_IdAndIdNot(LocalDateTime scheduledTime, UUID roomId, UUID appointmentId);
 
-    boolean existsByScheduledTimeAndDoctor_IdAndIdNot(LocalDateTime scheduledTime, UUID doctorId, UUID appointmentId);
+  boolean existsByScheduledTimeAndDoctor_IdAndIdNot(LocalDateTime scheduledTime, UUID doctorId, UUID appointmentId);
 
-    boolean existsByScheduledTimeAndPatient_IdAndIdNot(LocalDateTime scheduledTime, UUID patientId, UUID appointmentId);
+  boolean existsByScheduledTimeAndPatient_IdAndIdNot(LocalDateTime scheduledTime, UUID patientId, UUID appointmentId);
 }

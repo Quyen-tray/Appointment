@@ -5,7 +5,6 @@ import com.hospital.appointmentservice.patient.dto.ContactReplyHistoryDTO;
 import com.hospital.appointmentservice.patient.dto.ContactUsDTO;
 import com.hospital.appointmentservice.patient.entity.ContactReplyHistory;
 import com.hospital.appointmentservice.patient.entity.ContactUs;
-import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.ContactReplyHistoryRepository;
 import com.hospital.appointmentservice.patient.repository.ContactUsRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;

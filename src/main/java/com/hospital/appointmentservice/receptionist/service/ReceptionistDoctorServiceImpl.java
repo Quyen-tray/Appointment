@@ -4,7 +4,6 @@ package com.hospital.appointmentservice.receptionist.service;
 import com.hospital.appointmentservice.admin.model.Doctor;
 import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import com.hospital.appointmentservice.receptionist.dto.DoctorResponseDTO;
-import com.hospital.appointmentservice.receptionist.service.ReceptionistDoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
