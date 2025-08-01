@@ -4,9 +4,7 @@ import com.hospital.appointmentservice.patient.dto.ContactReplyHistoryDTO;
 import com.hospital.appointmentservice.patient.dto.ContactUsDTO;
 import com.hospital.appointmentservice.patient.service.ContactUsService;
 import com.hospital.appointmentservice.receptionist.dto.ReplyContactDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.UUID;
 @RequestMapping("/api/appointment/contact")
 public class ContactRepControler {
     private final ContactUsService contactUsService;
-    @Autowired
+
     public ContactRepControler(ContactUsService contactUsService) {
         this.contactUsService = contactUsService;
     }

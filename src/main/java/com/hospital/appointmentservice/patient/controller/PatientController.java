@@ -47,7 +47,12 @@ public class PatientController {
     @GetMapping("/my-appointment")
     public ResponseEntity<?> getMyAppointments(Principal principal,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String doctorName,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String examiner) {
         String username = principal.getName();
         Patient patient = patientRepository.findByUser_Username(username);
 
@@ -56,7 +61,8 @@ public class PatientController {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("scheduledTime").descending());
-        Page<Appointment> appointmentPage = appointmentService.getAppointmentsByPatientId(patient.getId(), pageable);
+        Page<Appointment> appointmentPage = appointmentService.getAppointmentsByPatientId(patient.getId(), doctorName,
+                startDate, endDate, status, examiner, pageable);
 
         Page<AppointmentDto> dtoPage = appointmentPage.map(appointment -> {
             AppointmentDto dto = new AppointmentDto();
@@ -67,6 +73,18 @@ public class PatientController {
             dto.setDoctorName(appointment.getDoctor().getFullName());
             dto.setRoomName(
                     appointment.getRoom() != null ? appointment.getRoom().getRoomName() : "Chưa có phòng!");
+            if (appointment.getRelative() != null) {
+                RelativeDto relativeDto = new RelativeDto();
+                relativeDto.setId(appointment.getRelative().getId());
+                relativeDto.setFullName(appointment.getRelative().getFullName());
+                relativeDto.setDob(appointment.getRelative().getDob());
+                relativeDto.setGender(appointment.getRelative().getGender());
+                relativeDto.setRelation(appointment.getRelative().getRelation());
+                relativeDto.setNote(appointment.getRelative().getNote());
+                dto.setRelative(relativeDto);
+            } else {
+                dto.setPatientName(appointment.getPatient().getFullName());
+            }
             return dto;
         });
 

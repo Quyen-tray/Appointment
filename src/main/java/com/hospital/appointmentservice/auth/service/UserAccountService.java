@@ -4,7 +4,6 @@ import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import org.springframework.data.domain.Page;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public interface UserAccountService {
