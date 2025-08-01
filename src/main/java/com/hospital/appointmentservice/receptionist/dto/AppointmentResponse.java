@@ -3,6 +3,7 @@ package com.hospital.appointmentservice.receptionist.dto;
 import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.doctor.dto.DoctorDetailDto;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
+import com.hospital.appointmentservice.patient.dto.RelativeResponseDto;
 import lombok.*;
 
 import java.time.Instant;
@@ -28,4 +29,5 @@ public class AppointmentResponse {
 
     private String approvalStatus;
     private Instant approvedAt;
+    private RelativeResponseDto relative;
 }

@@ -1,10 +1,7 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
 import com.hospital.appointmentservice.admin.model.Appointment;
-import com.hospital.appointmentservice.patient.dto.LabRequestDto;
-import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
-import com.hospital.appointmentservice.patient.dto.MedicalVisitResponse;
-import com.hospital.appointmentservice.patient.dto.UpdateMedicalNote;
+import com.hospital.appointmentservice.patient.dto.*;
 import com.hospital.appointmentservice.patient.entity.LabRequest;
 import com.hospital.appointmentservice.patient.entity.MedicalVisit;
 import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
@@ -129,6 +126,7 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
             createMedicalVisit.setDoctor(appointment.get().getDoctor());
             createMedicalVisit.setPatient(appointment.get().getPatient());
             createMedicalVisit.setStatus("PROGRESS'");
+            createMedicalVisit.setCreatedAt(LocalDateTime.now());
             MedicalVisit newMedical = medicalVisitRepository.save(createMedicalVisit);
             return MedicalVisitResponse.builder()
                     .medicalVisit(mapToDto(newMedical))
@@ -137,6 +135,9 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
 
         MedicalVisitResponse response = new MedicalVisitResponse();
         response.setMedicalVisit(mapToDto(medicalVisit));
+
+        RelativeResponseDto relativeResponseDto = new RelativeResponseDto(appointment.get().getRelative().getId(), appointment.get().getRelative().getFullName(), appointment.get().getRelative().getRelation());
+        response.setRelative(relativeResponseDto);
         List<LabRequest> labRequests = labRequestRepository.findByVisit_Id(medicalVisit.getId());
         List<LabRequestDto> labRequestDtos = labRequests.stream()
                 .map(lr -> LabRequestDto.builder()
@@ -175,6 +176,7 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     public void updateNote(UUID appointmentId, UpdateMedicalNote update) {
         MedicalVisit medicalVisit = medicalVisitRepository.findByAppointment_Id(appointmentId);
         medicalVisit.setNote(update.getNote());
+        medicalVisit.setDiagnosis(update.getDiagnosis());
         medicalVisitRepository.save(medicalVisit);
     }
 }

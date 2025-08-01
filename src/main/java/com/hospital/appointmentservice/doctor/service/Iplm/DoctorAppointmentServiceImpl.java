@@ -7,8 +7,10 @@ import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.auth.repository.UserAccountRepository;
 import com.hospital.appointmentservice.doctor.dto.DoctorDetailDto;
+import com.hospital.appointmentservice.doctor.dto.UpdateDoctorAppointmentDto;
 import com.hospital.appointmentservice.doctor.service.DoctorAppointmentService;
 import com.hospital.appointmentservice.patient.dto.PatientDto;
+import com.hospital.appointmentservice.patient.dto.RelativeResponseDto;
 import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
 import com.hospital.appointmentservice.receptionist.dto.ReceptionistDto;
@@ -47,7 +49,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     @Override
-    public void updateDoctorAppointment(UUID appointmentId, String note) {
+    public void updateDoctorAppointment(UUID appointmentId, UpdateDoctorAppointmentDto updateData) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
         if(appointment.isPresent()) {
 
@@ -92,6 +94,12 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
         dto.setCreatedRole(a.getCreatedRole());
         dto.setApprovalStatus(a.getApprovalStatus());
         dto.setApprovedAt(a.getApprovedAt());
+
+        // Map Relative
+        if (a.getRelative() != null) {
+            RelativeResponseDto relativeDto = new RelativeResponseDto(a.getRelative().getId(), a.getRelative().getFullName(), a.getRelative().getRelation());
+            dto.setRelative(relativeDto);
+        }
 
         // Map CreatedBy
         if (a.getCreatedBy() != null) {

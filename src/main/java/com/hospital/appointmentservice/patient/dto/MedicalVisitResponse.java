@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 public class MedicalVisitResponse {
     private MedicalVisitDto medicalVisit;
-
+    private RelativeResponseDto relative;
     private List<LabRequestDto> labRequests;
 }

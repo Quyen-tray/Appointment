@@ -49,7 +49,7 @@ public class DoctorAppointmentController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateDoctorAppointment(@PathVariable UUID id, @RequestBody UpdateDoctorAppointmentDto updateData) {
         try {
-            doctorAppointmentService.updateDoctorAppointment(id,updateData.getNote());
+            doctorAppointmentService.updateDoctorAppointment(id,updateData);
             return ResponseEntity.status(HttpStatus.OK).body("Update successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errors in get appointments process" + e.getMessage());
