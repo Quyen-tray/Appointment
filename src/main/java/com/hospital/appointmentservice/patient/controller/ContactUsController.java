@@ -16,24 +16,13 @@ public class ContactUsController {
     public ContactUsController(ContactUsService contactUsService) {
         this.contactUsService = contactUsService;
     }
-
-    /**
-     * Gửi liên hệ từ người dùng không đăng nhập (trang public)
-     * POST /api/patient/contact
-     * Body: {
-     *   "name": "Nguyễn Văn A",
-     *   "email": "a@gmail.com",
-     *   "subject": "Hỏi khám",
-     *   "message": "Cho hỏi lịch khám cuối tuần?"
-     * }
-     */
     @PostMapping
     public ResponseEntity<String> submitContact(@RequestBody ContactUsDTO dto) {
         try {
             contactUsService.submitContact(dto);
             return ResponseEntity.ok("Gửi liên hệ thành công!");
         } catch (Exception ex) {
-            ex.printStackTrace(); // ✅ In lỗi ra log để dễ debug
+            ex.printStackTrace();
             return ResponseEntity.status(500).body("Gửi liên hệ thất bại: " + ex.getMessage());
         }
     }

@@ -17,4 +17,5 @@ public class ContactUsDTO {
     private String subject;
     private String message;
     private LocalDateTime createdAt;
+    private boolean replied;
 }

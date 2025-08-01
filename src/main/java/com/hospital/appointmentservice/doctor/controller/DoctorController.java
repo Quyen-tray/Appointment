@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.appointmentservice.admin.model.Doctor;
 import com.hospital.appointmentservice.doctor.dto.DoctorDetailDto;
+import com.hospital.appointmentservice.doctor.dto.DoctorDto;
 import com.hospital.appointmentservice.doctor.dto.DoctorListDto;
 import com.hospital.appointmentservice.doctor.service.DoctorService;
 
@@ -48,6 +50,16 @@ public class DoctorController {
             return ResponseEntity.ok(result);
         }catch(Exception ex){
             return ResponseEntity.status(500).body("Lỗi khi lấy danh sách bác sĩ!");
+        }
+    }
+    // lấy danh sách bác sĩ theo khoa 
+     @GetMapping("/by-department")
+    public ResponseEntity<?> getDoctorsByDepartment(@RequestParam UUID departmentId) {
+        try {
+            List<DoctorDto> doctors = doctorService.getDoctorsByDepartment(departmentId);
+            return ResponseEntity.ok(doctors);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi khi lấy danh sách bác sĩ theo khoa!");
         }
     }
 }

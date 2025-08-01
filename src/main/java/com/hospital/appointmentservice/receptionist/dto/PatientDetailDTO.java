@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -23,6 +22,5 @@ public class PatientDetailDTO {
 
     private String gender;
     private String address;
-    private List<PatientHistoryDTO> history;
 }
 

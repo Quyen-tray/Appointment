@@ -9,6 +9,7 @@ import org.hibernate.annotations.Nationalized;
 
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.patient.entity.Patient;
+import com.hospital.appointmentservice.patient.entity.Relative;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Appointment {
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "appointment_id", nullable = false)
     private UUID id;
@@ -64,8 +65,12 @@ public class Appointment {
     @Column(name = "approved_at")
     private Instant approvedAt;
 
-    //Update
+    // Update
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String reason;
+
+    @ManyToOne
+    @JoinColumn(name = "relative_id")
+    private Relative relative;
 
 }

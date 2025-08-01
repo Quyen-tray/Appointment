@@ -1,11 +1,12 @@
 package com.hospital.appointmentservice.patient.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable; 
+import org.springframework.data.domain.Pageable;
 
 import com.hospital.appointmentservice.patient.dto.AppointmentDto;
 import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
@@ -14,8 +15,10 @@ import com.hospital.appointmentservice.admin.model.Appointment;
 public interface PatientAppointmentService {
     // lấy lịch hẹn theo patient_id
     List<Appointment> getAppointmentsByPatientId(UUID patientid);
-    //phân trang
-    Page<Appointment> getAppointmentsByPatientId(UUID patientId, Pageable pageable);
+
+    // phân trang
+    Page<Appointment> getAppointmentsByPatientId(UUID patientId, String doctorName, LocalDate startDate,
+            LocalDate endDate, String status, String examiner, Pageable pageable);
 
     // lấy 1 lịch hẹn cụ thể để xử lý
     Appointment getAppointmentById(UUID appointmentId);

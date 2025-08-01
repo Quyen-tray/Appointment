@@ -1,7 +1,7 @@
 package com.hospital.appointmentservice.receptionist.controller;
 
 import com.hospital.appointmentservice.receptionist.dto.RoomDto;
-import com.hospital.appointmentservice.receptionist.service.impl.RoomService;
+import com.hospital.appointmentservice.receptionist.service.RoomService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

@@ -4,7 +4,6 @@ import com.hospital.appointmentservice.auth.dto.ResetPassDTO;
 import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.security.JwtUtil;
 import com.hospital.appointmentservice.auth.service.UserService;
-import com.hospital.appointmentservice.patient.dto.ChangePasswordRequestDto;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
