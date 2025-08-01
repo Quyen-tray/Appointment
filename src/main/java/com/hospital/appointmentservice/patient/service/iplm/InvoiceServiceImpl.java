@@ -1,7 +1,10 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
 import com.hospital.appointmentservice.admin.model.Appointment;
+import com.hospital.appointmentservice.auth.service.EmailService;
 import com.hospital.appointmentservice.patient.dto.InvoiceDto;
+import com.hospital.appointmentservice.patient.dto.NotifyUnpaidDto;
+import com.hospital.appointmentservice.patient.dto.UnpaidInvoiceDto;
 import com.hospital.appointmentservice.patient.entity.LabRequest;
 import com.hospital.appointmentservice.patient.entity.MedicalVisit;
 import com.hospital.appointmentservice.patient.entity.Patient;
@@ -10,9 +13,11 @@ import com.hospital.appointmentservice.patient.service.InvoiceService;
 import com.hospital.appointmentservice.patient.entity.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -26,18 +31,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final AppointmentRepository appointmentRepository;
     private final MedicalVisitRepository medicalVisitRepository;
     private final PatientRepository patientRepository;
-
+    private final EmailService emailService;
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                               LabRequestRepository labRequestRepository,
                               AppointmentRepository appointmentRepository,
                               MedicalVisitRepository medicalVisitRepository,
-                            PatientRepository patientRepository) {
+                              PatientRepository patientRepository,
+                              EmailService emailService) {
         this.invoiceRepository = invoiceRepository;
         this.appointmentRepository = appointmentRepository;
         this.labRequestRepository = labRequestRepository;
         this.medicalVisitRepository = medicalVisitRepository;
         this.patientRepository = patientRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -76,7 +83,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Invoice addNewInvoice(UUID appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId).get();
-        if(appointment == null){
+        appointment.setStatus("DONE");
+        appointmentRepository.save(appointment);
+        if (appointment == null) {
             return null;
         }
         MedicalVisit medicalVisit = medicalVisitRepository.findByAppointment_Id(appointmentId);
@@ -89,6 +98,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         invoice.setAmount(totalAmount);
         invoice.setPatient(appointment.getPatient());
+        invoice.setIssuedDate(LocalDateTime.now());
         invoiceRepository.save(invoice);
         return invoice;
 
@@ -113,5 +123,83 @@ public class InvoiceServiceImpl implements InvoiceService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void sendEmail(NotifyUnpaidDto notifies) {
+        if (notifies == null || notifies.getInvoiceIds() == null || notifies.getInvoiceIds().isEmpty()) {
+            return; // No invoices to process
+        }
+
+        for (UUID invoiceId : notifies.getInvoiceIds()) {
+            try {
+                // Find the invoice by ID
+                Invoice invoice = invoiceRepository.findById(invoiceId)
+                        .orElseThrow(() -> new RuntimeException("Invoice not found with ID: " + invoiceId));
+
+                // Check if the invoice is unpaid
+                if ("Đã thanh toán".equalsIgnoreCase(invoice.getStatus())) {
+                    continue; // Skip already paid invoices
+                }
+
+                // Get patient and their email
+                Patient patient = invoice.getPatient();
+                if (patient == null || patient.getUser() == null || patient.getEmail() == null) {
+                    continue; // Skip if patient or email not found
+                }
+
+                String patientEmail = patient.getEmail();
+                String patientName = patient.getFullName() != null ? patient.getFullName() : "Quý khách";
+
+                // Prepare email content
+                String subject = "Nhắc nhở thanh toán hóa đơn #" + invoiceId;
+
+                String content = String.format(
+                        "Kính gửi %s,%n%n" +
+                                "Hệ thống ghi nhận hóa đơn #%s của Quý khách chưa được thanh toán.%n" +
+                                "Số tiền cần thanh toán: %s VND%n" +
+                                "Ngày phát hành: %s%n%n" +
+                                "Vui lòng thanh toán sớm để tránh gián đoạn dịch vụ.%n%n" +
+                                "Trân trọng,%nGroup 1",
+                        patientName,
+                        invoiceId,
+                        invoice.getAmount() != null ? invoice.getAmount().toString() : "0",
+                        invoice.getIssuedDate() != null ? invoice.getIssuedDate().toString() : "N/A"
+                );
+
+                // Send email
+                emailService.send(patientEmail, subject, content);
+
+                // Log the notification (optional)
+                System.out.println("Sent payment reminder for invoice #" + invoiceId + " to " + patientEmail);
+
+            } catch (Exception e) {
+                // Log the error but continue with other invoices
+                System.err.println("Error processing invoice #" + invoiceId + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public List<UnpaidInvoiceDto> getAllUnpaidInvoice() {
+        List<Invoice> invoices = invoiceRepository.findAll();
+        return invoices.stream()
+                .filter(invoice -> invoice.getStatus().equals("UNPAID")) // lọc unpaid
+                .sorted(Comparator.comparing(Invoice::getIssuedDate).reversed())
+                .map(invoice -> {
+                    UnpaidInvoiceDto dto = new UnpaidInvoiceDto();
+                    dto.setId(invoice.getId());
+                    dto.setAmount(invoice.getAmount());
+                    dto.setIssuedDate(invoice.getIssuedDate());
+                    dto.setStatus(invoice.getStatus());
+                    dto.setPatientName(invoice.getPatient().getFullName());
+                    dto.setEmail(invoice.getPatient().getEmail());
+                    dto.setPhone(invoice.getPatient().getPhone());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
     }
 }

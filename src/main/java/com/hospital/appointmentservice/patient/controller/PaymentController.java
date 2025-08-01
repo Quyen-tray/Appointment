@@ -1,8 +1,7 @@
 package com.hospital.appointmentservice.patient.controller;
 
 import com.hospital.appointmentservice.config.VNPayConfig;
-import com.hospital.appointmentservice.patient.dto.PaymentResponse;
-import com.hospital.appointmentservice.patient.dto.TransactionResponse;
+import com.hospital.appointmentservice.patient.dto.*;
 import com.hospital.appointmentservice.patient.entity.Invoice;
 import com.hospital.appointmentservice.patient.entity.Payment;
 import com.hospital.appointmentservice.patient.service.InvoiceService;
@@ -45,6 +44,25 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errors in get invoice process" + e.getMessage());
         }
 
+    }
+
+    @PostMapping("/send-email")
+    public ResponseEntity<?> snenEmail(@RequestBody NotifyUnpaidDto invoices) {
+        try {
+            invoiceService.sendEmail(invoices);
+            return ResponseEntity.status(HttpStatus.OK).body("Send email successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errors in get invoice process" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/invoices/unpaid")
+    public ResponseEntity<?> getInvoiceUnpaid() {
+        List<UnpaidInvoiceDto> invoices = invoiceService.getAllUnpaidInvoice();
+        if (invoices == null || invoices.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(invoices);
     }
 
     // Endpoint xử lý thông tin giao dịch sau khi thanh toán

@@ -1,7 +1,9 @@
 package com.hospital.appointmentservice.patient.service;
 
 import com.hospital.appointmentservice.patient.dto.InvoiceDto;
+import com.hospital.appointmentservice.patient.dto.NotifyUnpaidDto;
 import com.hospital.appointmentservice.patient.dto.PaymentResponse;
+import com.hospital.appointmentservice.patient.dto.UnpaidInvoiceDto;
 import com.hospital.appointmentservice.patient.entity.Invoice;
 
 import java.io.UnsupportedEncodingException;
@@ -15,5 +17,7 @@ public interface InvoiceService {
     Invoice addNewInvoice(UUID appointmentId);
     Invoice getInvoiceById(UUID invoiceId);
     List<InvoiceDto> getUnpaidInvoice(UUID patientId);
+    void sendEmail(NotifyUnpaidDto invoices);
+    List<UnpaidInvoiceDto> getAllUnpaidInvoice();
 }
 
