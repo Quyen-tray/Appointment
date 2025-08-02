@@ -5,7 +5,7 @@ import com.hospital.appointmentservice.auth.security.JwtUtil;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentDTO;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
 import com.hospital.appointmentservice.receptionist.dto.UpdateStatusAppointmentDto;
-import com.hospital.appointmentservice.receptionist.service.impl.IAppointmentService;
+import com.hospital.appointmentservice.receptionist.service.AppointmentService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
@@ -27,7 +27,7 @@ import java.util.UUID;
 // Annotation make field private and final
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppointmentController {
-    IAppointmentService appointmentService;
+    AppointmentService appointmentService;
     JwtUtil jwtUtil;
 
     @GetMapping("")
