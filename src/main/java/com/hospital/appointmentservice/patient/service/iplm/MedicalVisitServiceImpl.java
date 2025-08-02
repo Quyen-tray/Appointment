@@ -136,8 +136,11 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         MedicalVisitResponse response = new MedicalVisitResponse();
         response.setMedicalVisit(mapToDto(medicalVisit));
 
-        RelativeResponseDto relativeResponseDto = new RelativeResponseDto(appointment.get().getRelative().getId(), appointment.get().getRelative().getFullName(), appointment.get().getRelative().getRelation());
-        response.setRelative(relativeResponseDto);
+        // Map Relative
+        if (appointment.get().getRelative() != null) {
+            RelativeResponseDto relativeDto = new RelativeResponseDto(appointment.get().getRelative().getId(), appointment.get().getRelative().getFullName(), appointment.get().getRelative().getRelation());
+            response.setRelative(relativeDto);
+        }
         List<LabRequest> labRequests = labRequestRepository.findByVisit_Id(medicalVisit.getId());
         List<LabRequestDto> labRequestDtos = labRequests.stream()
                 .map(lr -> LabRequestDto.builder()
