@@ -18,13 +18,6 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     RoomReceptionRepository roomRepository;
 
-
-    @Override
-    public List<String> getAllRoomTypes() {
-        return roomRepository.findDistinctRoomTypes();
-    }
-
-
     @Override
     public List<RoomDto> getAllRooms() {
         List<Room> rooms = roomRepository.findAll();
