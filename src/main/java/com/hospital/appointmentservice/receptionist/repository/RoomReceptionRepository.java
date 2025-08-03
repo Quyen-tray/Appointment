@@ -10,9 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface RoomReceptionRepository extends JpaRepository<Room, UUID> {
-    List<Room> findByRoomType(String roomType);
-    @Query("SELECT DISTINCT r.roomType FROM Room r WHERE r.roomType IS NOT NULL")
-    List<String> findDistinctRoomTypes();
 }
 
 
