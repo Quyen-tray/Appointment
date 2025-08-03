@@ -147,9 +147,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found with id: " + id));
         ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
-        if (appointmentRepository.existsByScheduledTimeAndRoom_IdAndIdNot(LocalDateTime.ofInstant(updateAppointmentDTO.getScheduledTime(), zoneId), updateAppointmentDTO.getRoomId(), id)) {
-            throw new IllegalArgumentException("Room is already booked at this time.");
-        }
+
 
         if (appointmentRepository.existsByScheduledTimeAndDoctor_IdAndIdNot(LocalDateTime.ofInstant(updateAppointmentDTO.getScheduledTime(), zoneId), updateAppointmentDTO.getDoctorId(), id)) {
             throw new IllegalArgumentException("Doctor already has an appointment at this time.");
@@ -173,7 +171,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void updateStatusAppointment(UUID id, UpdateStatusAppointmentDto body, String username) {
         UserAccount user =  userAccountRepository.findUserAccountByUsername(username);
         Optional<Appointment> appointment = appointmentRepository.findById(id);
-        if (appointmentRepository.existsByScheduledTimeAndRoom_Id(appointment.get().getScheduledTime(), body.getRoomId())) {
+        boolean isRoomBooked = appointmentRepository.existsByScheduledTimeAndRoom_IdAndIdNot(
+                appointment.get().getScheduledTime(),
+                body.getRoomId(),
+                appointment.get().getId()
+        );
+        if (isRoomBooked) {
             throw new IllegalArgumentException("Room is already booked at this time.");
         }
        Room room = roomRepository.findById(body.getRoomId()).orElse(null);
@@ -218,7 +221,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     private String auditAppointment(AppointmentDTO appointmentDTO, Appointment appointment, boolean isCreate, UUID id) {
         appointment.setPatient(patientRepository.findById(appointmentDTO.getPatientId()).orElse(null));
         appointment.setDoctor(doctorRepository.findById(appointmentDTO.getDoctorId()).orElse(null));
-        appointment.setRoom(roomRepository.findById(appointmentDTO.getRoomId()).orElse(null));
+        if(appointment.getRoom() != null) {
+            appointment.setRoom(roomRepository.findById(appointmentDTO.getRoomId()).orElse(null));
+        }
+
         LocalDateTime scheduledTime = LocalDateTime.ofInstant(
                 appointmentDTO.getScheduledTime(),
                 ZoneId.of("Asia/Ho_Chi_Minh")
