@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -43,5 +44,8 @@ public class LabRequest {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "price")
+    private BigDecimal price;
 
 }

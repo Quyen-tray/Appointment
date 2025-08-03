@@ -1,7 +1,11 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
-import com.hospital.appointmentservice.patient.dto.MedicalVisitDto;
+import com.hospital.appointmentservice.admin.model.Appointment;
+import com.hospital.appointmentservice.patient.dto.*;
+import com.hospital.appointmentservice.patient.entity.LabRequest;
 import com.hospital.appointmentservice.patient.entity.MedicalVisit;
+import com.hospital.appointmentservice.patient.repository.AppointmentRepository;
+import com.hospital.appointmentservice.patient.repository.LabRequestRepository;
 import com.hospital.appointmentservice.patient.repository.MedicalVisitRepository;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
 import com.hospital.appointmentservice.patient.service.MedicalVisitService;
@@ -18,18 +22,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MedicalVisitServiceImpl implements MedicalVisitService {
     private final MedicalVisitRepository medicalVisitRepository;
     private final PatientRepository patientRepository; // để kiểm tra tồn tại patient khi tạo mới
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
+    private final LabRequestRepository labRequestRepository;
+    private final AppointmentRepository appointmentRepository;
 
     public MedicalVisitServiceImpl(MedicalVisitRepository medicalVisitRepository,
-                                   PatientRepository patientRepository) {
+                                   PatientRepository patientRepository,
+                                   LabRequestRepository labRequestRepository, AppointmentRepository appointmentRepository) {
         this.medicalVisitRepository = medicalVisitRepository;
         this.patientRepository = patientRepository;
+        this.labRequestRepository = labRequestRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     private MedicalVisitDto mapToDto(MedicalVisit mv) {
@@ -102,6 +111,53 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         return dtos;
     }
 
+    @Override
+    public MedicalVisitResponse getByAppointmentAndPatientId(UUID appointmentId, UUID patientId) {
+        if (!patientRepository.existsById(patientId)) {
+            return null;
+        }
+
+        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+
+        MedicalVisit medicalVisit = medicalVisitRepository.findByAppointment_Id(appointmentId);
+        if (medicalVisit == null) {
+            MedicalVisit createMedicalVisit = new MedicalVisit();
+            createMedicalVisit.setAppointment(appointment.get());
+            createMedicalVisit.setDoctor(appointment.get().getDoctor());
+            createMedicalVisit.setPatient(appointment.get().getPatient());
+            createMedicalVisit.setStatus("PROGRESS'");
+            createMedicalVisit.setCreatedAt(LocalDateTime.now());
+            MedicalVisit newMedical = medicalVisitRepository.save(createMedicalVisit);
+            return MedicalVisitResponse.builder()
+                    .medicalVisit(mapToDto(newMedical))
+                    .build();
+        }
+
+        MedicalVisitResponse response = new MedicalVisitResponse();
+        response.setMedicalVisit(mapToDto(medicalVisit));
+
+        // Map Relative
+        if (appointment.get().getRelative() != null) {
+            RelativeResponseDto relativeDto = new RelativeResponseDto(appointment.get().getRelative().getId(), appointment.get().getRelative().getFullName(), appointment.get().getRelative().getRelation());
+            response.setRelative(relativeDto);
+        }
+        List<LabRequest> labRequests = labRequestRepository.findByVisit_Id(medicalVisit.getId());
+        List<LabRequestDto> labRequestDtos = labRequests.stream()
+                .map(lr -> LabRequestDto.builder()
+                        .labId(lr.getLabId())
+                        .visitId(lr.getVisit() != null ? lr.getVisit().getId() : null)
+                        .requestedBy(lr.getRequestedBy())
+                        .roomId(lr.getRoomId())
+                        .testType(lr.getTestType())
+                        .result(lr.getResult())
+                        .status(lr.getStatus())
+                        .price(lr.getPrice())
+                        .build())
+                .collect(Collectors.toList());
+
+        response.setLabRequests(labRequestDtos);
+        return response;
+    }
 
 
     @Override
@@ -117,5 +173,13 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     @Override
     public void deleteVisit(UUID id) {
 
+    }
+
+    @Override
+    public void updateNote(UUID appointmentId, UpdateMedicalNote update) {
+        MedicalVisit medicalVisit = medicalVisitRepository.findByAppointment_Id(appointmentId);
+        medicalVisit.setNote(update.getNote());
+        medicalVisit.setDiagnosis(update.getDiagnosis());
+        medicalVisitRepository.save(medicalVisit);
     }
 }

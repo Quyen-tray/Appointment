@@ -1,5 +1,6 @@
 package com.hospital.appointmentservice.patient.controller;
 
+import com.hospital.appointmentservice.patient.dto.CreateLabRequest;
 import com.hospital.appointmentservice.patient.dto.LabRequestDto;
 import com.hospital.appointmentservice.patient.service.LabRequestService;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,17 @@ public class LabRequestController {
             return ResponseEntity.ok().body(dtos);
         }
         return ResponseEntity.ok(dtos);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createNewLabRequest(@RequestBody CreateLabRequest createLabRequest) {
+        labRequestService.createNewLabRequest(createLabRequest);
+        return ResponseEntity.ok("Create successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteLabRequest(@PathVariable UUID id) {
+        labRequestService.deleteLabRequest(id);
+        return ResponseEntity.ok("Delete successfully");
     }
 }

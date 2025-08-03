@@ -1,23 +1,20 @@
 package com.hospital.appointmentservice.patient.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 @Builder
-public class LabRequestDto {
-    private UUID labId;
+public class CreateLabRequest {
     private UUID visitId;
-    private String requestedBy;
     private UUID roomId;
     private String testType;
     private String result;
     private String status;
     private BigDecimal price;
-    // Nếu cần thêm thông tin khác (ví dụ patientId, patientName...), có thể bổ sung
 }

@@ -26,4 +26,6 @@ public interface MedicalVisitRepository extends JpaRepository<MedicalVisit, UUID
             @Param("toDate") LocalDateTime toDate,
             Pageable pageable
     );
+
+    MedicalVisit findByAppointment_Id(UUID appointmentId);
 }
