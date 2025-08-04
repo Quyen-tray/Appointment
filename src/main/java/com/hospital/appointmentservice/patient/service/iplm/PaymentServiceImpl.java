@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.patient.service.iplm;
 
-import com.hospital.appointmentservice.admin.model.Appointment;
 import com.hospital.appointmentservice.config.VNPayConfig;
 import com.hospital.appointmentservice.patient.dto.PaymentResponse;
 import com.hospital.appointmentservice.patient.entity.Invoice;

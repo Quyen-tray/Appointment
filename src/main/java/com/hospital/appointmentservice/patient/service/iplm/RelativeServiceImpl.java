@@ -6,8 +6,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import com.hospital.appointmentservice.admin.controller.AccountAdminController;
+import org.springframework.data.domain.Pageable;
 import com.hospital.appointmentservice.patient.dto.RelativeDto;
 import com.hospital.appointmentservice.patient.dto.RelativeResponseDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
@@ -19,16 +21,11 @@ import com.hospital.appointmentservice.patient.service.RelativeService;
 @Service
 public class RelativeServiceImpl implements RelativeService {
 
-    private final AccountAdminController accountAdminController;
     @Autowired
     private RelativeRepository relativeRepository;
 
     @Autowired
     private PatientRepository patientRepository;
-
-    RelativeServiceImpl(AccountAdminController accountAdminController) {
-        this.accountAdminController = accountAdminController;
-    }
 
     @Override
     public List<RelativeDto> getRelativesByUsername(String username) {
@@ -105,6 +102,26 @@ public class RelativeServiceImpl implements RelativeService {
         return relatives.stream()
                 .map(r -> new RelativeResponseDto(r.getId(), r.getFullName(), r.getRelation()))
                 .toList();
+    }
+
+    @Override
+    public Page<RelativeDto> getPagedRelativesWithFullInfo(String username, int page, int size, String search) {
+        Patient patient = patientRepository.findByUser_Username(username);
+        if (patient == null) {
+            throw new RuntimeException("Không tìm thấy bệnh nhân");
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Relative> relativePage;
+        if (search != null && !search.isEmpty()) {
+            relativePage = relativeRepository.findByPatient_IdAndFullNameContainingIgnoreCase(
+                    patient.getId(), search, pageable);
+        } else {
+            relativePage = relativeRepository.findByPatient_Id(patient.getId(), pageable);
+        }
+
+        return relativePage.map(this::toDto);
     }
 
 }

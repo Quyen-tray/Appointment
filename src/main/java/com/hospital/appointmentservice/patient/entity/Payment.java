@@ -1,6 +1,5 @@
 package com.hospital.appointmentservice.patient.entity;
 
-import com.hospital.appointmentservice.admin.model.Appointment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -6,8 +6,6 @@ import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.auth.repository.UserAccountRepository;
 import com.hospital.appointmentservice.patient.dto.UpdateProfileRequestDto;
 import com.hospital.appointmentservice.receptionist.dto.ReceptionistProfileDTO;
-import com.hospital.appointmentservice.patient.repository.PatientRepository;
-
 import com.hospital.appointmentservice.receptionist.repository.ReceptionistRepository;
 import com.hospital.appointmentservice.receptionist.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;

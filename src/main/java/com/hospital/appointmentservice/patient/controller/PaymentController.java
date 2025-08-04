@@ -6,7 +6,6 @@ import com.hospital.appointmentservice.patient.entity.Invoice;
 import com.hospital.appointmentservice.patient.entity.Payment;
 import com.hospital.appointmentservice.patient.service.InvoiceService;
 import com.hospital.appointmentservice.patient.service.PaymentService;
-import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

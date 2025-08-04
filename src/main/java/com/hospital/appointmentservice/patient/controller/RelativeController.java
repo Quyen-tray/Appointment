@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.appointmentservice.patient.dto.RelativeDto;
@@ -57,9 +58,19 @@ public class RelativeController {
 
     @GetMapping("/list_relative")
     public ResponseEntity<List<RelativeResponseDto>> getSummary(Principal principal) {
-    String username = principal.getName();
-    List<RelativeResponseDto> list = relativeService.getRelativesSummaryByUsername(username);
-    return ResponseEntity.ok(list);
-}
+        String username = principal.getName();
+        List<RelativeResponseDto> list = relativeService.getRelativesSummaryByUsername(username);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<?> getRelativesPaged(
+            Principal principal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String search) {
+        String username = principal.getName();
+        return ResponseEntity.ok(relativeService.getPagedRelativesWithFullInfo(username, page, size, search));
+    }
 
 }

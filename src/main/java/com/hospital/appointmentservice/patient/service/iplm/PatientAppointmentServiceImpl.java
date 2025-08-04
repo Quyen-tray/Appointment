@@ -17,6 +17,7 @@ import com.hospital.appointmentservice.admin.model.Doctor;
 import com.hospital.appointmentservice.doctor.repository.DoctorRepository;
 import com.hospital.appointmentservice.patient.dto.AppointmentDto;
 import com.hospital.appointmentservice.patient.dto.AppointmentRequestDto;
+import com.hospital.appointmentservice.patient.dto.RelativeDto;
 import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.entity.Relative;
 import com.hospital.appointmentservice.patient.repository.PatientRepository;
@@ -165,6 +166,20 @@ public class PatientAppointmentServiceImpl implements PatientAppointmentService 
         dto.setRoomName(appointment.getRoom() != null ? appointment.getRoom().getName() : "Chưa có phòng!");
         dto.setScheduledTime(appointment.getScheduledTime().toString());
         dto.setStatus(appointment.getStatus());
+
+        if (appointment.getRelative() != null) {
+            dto.setPatientName(appointment.getRelative().getFullName());
+
+            RelativeDto relativeDto = new RelativeDto();
+            relativeDto.setId(appointment.getRelative().getId());
+            relativeDto.setFullName(appointment.getRelative().getFullName());
+
+            dto.setRelative(relativeDto);
+        } else {
+            dto.setPatientName(patient.getFullName());
+            dto.setRelative(null);
+        }
+
         return dto;
     }
 
