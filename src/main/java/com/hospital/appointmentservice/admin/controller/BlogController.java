@@ -2,16 +2,13 @@ package com.hospital.appointmentservice.admin.controller;
 
 import com.hospital.appointmentservice.admin.dto.AuditBlogDto;
 import com.hospital.appointmentservice.admin.dto.BlogDto;
-import com.hospital.appointmentservice.admin.model.Blog;
 import com.hospital.appointmentservice.admin.service.BlogService;
-import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

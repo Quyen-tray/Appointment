@@ -3,9 +3,6 @@ package com.hospital.appointmentservice.admin.service;
 
 import com.hospital.appointmentservice.admin.dto.AuditBlogDto;
 import com.hospital.appointmentservice.admin.dto.BlogDto;
-import com.hospital.appointmentservice.admin.model.Blog;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.UUID;
 

@@ -11,7 +11,6 @@ import com.hospital.appointmentservice.patient.entity.Patient;
 import com.hospital.appointmentservice.patient.repository.*;
 import com.hospital.appointmentservice.patient.service.InvoiceService;
 import com.hospital.appointmentservice.patient.entity.Invoice;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final MedicalVisitRepository medicalVisitRepository;
     private final PatientRepository patientRepository;
     private final EmailService emailService;
-    @Autowired
+    
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                               LabRequestRepository labRequestRepository,
                               AppointmentRepository appointmentRepository,

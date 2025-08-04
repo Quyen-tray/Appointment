@@ -1,7 +1,6 @@
 package com.hospital.appointmentservice.patient.service;
 
 import com.hospital.appointmentservice.patient.dto.PaymentResponse;
-import com.hospital.appointmentservice.patient.entity.Invoice;
 import com.hospital.appointmentservice.patient.entity.Payment;
 
 import java.io.UnsupportedEncodingException;

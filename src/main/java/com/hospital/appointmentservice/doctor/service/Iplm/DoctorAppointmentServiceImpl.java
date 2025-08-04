@@ -1,8 +1,6 @@
 package com.hospital.appointmentservice.doctor.service.Iplm;
 
 import com.hospital.appointmentservice.admin.model.Appointment;
-import com.hospital.appointmentservice.admin.model.Receptionist;
-import com.hospital.appointmentservice.admin.model.Staff;
 import com.hospital.appointmentservice.auth.dto.UserAccountDto;
 import com.hospital.appointmentservice.auth.model.UserAccount;
 import com.hospital.appointmentservice.auth.repository.UserAccountRepository;

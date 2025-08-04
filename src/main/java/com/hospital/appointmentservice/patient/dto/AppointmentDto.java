@@ -16,4 +16,5 @@ public class AppointmentDto {
     private String doctorName;
     private String roomName;
     private RelativeDto relative;
+
 }

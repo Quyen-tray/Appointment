@@ -1,10 +1,8 @@
 package com.hospital.appointmentservice.doctor.controller;
 
-import com.hospital.appointmentservice.admin.dto.BlogDto;
 import com.hospital.appointmentservice.auth.security.JwtUtil;
 import com.hospital.appointmentservice.doctor.dto.UpdateDoctorAppointmentDto;
 import com.hospital.appointmentservice.doctor.service.DoctorAppointmentService;
-import com.hospital.appointmentservice.doctor.service.DoctorService;
 import com.hospital.appointmentservice.receptionist.dto.AppointmentResponse;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;

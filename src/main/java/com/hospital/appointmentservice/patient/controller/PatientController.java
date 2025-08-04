@@ -60,6 +60,7 @@ public class PatientController {
             return ResponseEntity.notFound().build();
         }
 
+        doctorName = doctorName != null ? doctorName.trim() : null;
         Pageable pageable = PageRequest.of(page, size, Sort.by("scheduledTime").descending());
         Page<Appointment> appointmentPage = appointmentService.getAppointmentsByPatientId(patient.getId(), doctorName,
                 startDate, endDate, status, examiner, pageable);
